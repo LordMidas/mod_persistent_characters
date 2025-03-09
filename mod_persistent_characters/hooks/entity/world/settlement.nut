@@ -8,7 +8,7 @@
 		// Collect all persistent bros before roster is updated, so that after roster update
 		// if any are removed by the settlement, we can update their persistent data
 		local myRoster = ::World.getRoster(this.getID());
-		local persistentBros = myRoster.getAll().filter(@(_, _b) _b.ModPersistentCharacters_getID() != null);
+		local persistentBros = myRoster.getAll().filter(@(_, _b) _b.ModPersistentCharacters_getUID() != null);
 		foreach (bro in persistentBros)
 		{
 			::World.getTemporaryRoster().add(bro);
