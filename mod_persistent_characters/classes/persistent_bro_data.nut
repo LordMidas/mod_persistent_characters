@@ -218,6 +218,12 @@
 				break;
 		}
 
+		_bro.setHitpoints(_bro.getHitpointsMax());
+		foreach (item in _bro.getItems().getAllItems())
+		{
+			item.setCondition(item.getConditionMax());
+		}
+
 		return _bro;
 	}
 
