@@ -155,10 +155,17 @@
 		}
 
 		local broData = ::ModPersistentCharacters.getDataManager().getBro(_bro.ModPersistentCharacters_getUID());
-		if (broData != null && broData.getLifetimeStats().len() > 1)
+		if (broData != null)
 		{
-			local stats = broData.getLifetimeStatsTotal();
-			str += format(" who has been on %i campaigns over the course of %i days, taking part in %i battles and making %i kills", broData.getLifetimeStats().len(), stats.Days, stats.Battles, stats.Kills)
+			if (broData.getCampaignUID() != campaignUID || broData.getLifetimeStats().len() > 1)
+			{
+				local stats = broData.getLifetimeStatsTotal();
+				str += format(" who has been on %i campaigns over the course of %i days, taking part in %i battles and making %i kills", broData.getLifetimeStats().len(), stats.Days, stats.Battles, stats.Kills)
+			}
+			else
+			{
+				str += " who has not been on any other campaign so far";
+			}
 		}
 
 		return {
