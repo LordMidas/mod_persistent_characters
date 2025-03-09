@@ -88,7 +88,7 @@
 		}
 
 		stats = ::ModPersistentCharacters.Class.LifetimeStats(_bro);
-		this.LifetimeStats[this.CampaignUID] <- stats;
+		this.LifetimeStats[_campaignUID] <- stats;
 		this.LifetimeStatsTotal.Kills += stats.Kills;
 		this.LifetimeStatsTotal.Battles += stats.Battles;
 		this.LifetimeStatsTotal.Days += stats.Days;
