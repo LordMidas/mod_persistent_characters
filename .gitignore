@@ -1,0 +1,7 @@
+*.sublime-workspace
+*.sublime-project
+.bbbuilder/
+brushes/
+gfx/*.png
+!gfx/*/.png
+*.zip
