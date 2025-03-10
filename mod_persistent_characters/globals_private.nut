@@ -157,7 +157,7 @@
 		local broData = ::ModPersistentCharacters.getDataManager().getBro(_bro.ModPersistentCharacters_getUID());
 		if (broData != null)
 		{
-			if (broData.getCampaignUID() != campaignUID || broData.getLifetimeStats().len() > 1)
+			if (broData.getCampaignUID() != ::ModPersistentCharacters.getCampaignUID() || broData.getLifetimeStats().len() > 1)
 			{
 				local stats = broData.getLifetimeStatsTotal();
 				str += format(" who has been on %i campaigns over the course of %i days, taking part in %i battles and making %i kills", broData.getLifetimeStats().len(), stats.Days, stats.Battles, stats.Kills)
