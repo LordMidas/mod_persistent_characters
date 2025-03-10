@@ -85,6 +85,7 @@ this.mod_persistent_characters_persistent_bro_offers_to_join_event <- ::inherit(
 						::World.getPlayerRoster().add(_event.m.Bro);
 						::World.getTemporaryRoster().clear();
 						_event.m.Bro.onHired();
+						::World.Assets.addMoney(-_event.m.Demand);
 						::ModPersistentCharacters.addBlockedBro(_event.m.Bro.ModPersistentCharacters_getUID());
 						return 0;
 					}
