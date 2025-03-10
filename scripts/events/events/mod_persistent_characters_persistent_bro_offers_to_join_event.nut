@@ -190,18 +190,15 @@ this.mod_persistent_characters_persistent_bro_offers_to_join_event <- ::inherit(
 		local broData = campaignData.getRandomBro(@(_b) blockedBros.find(_b.getUID()) == null);
 
 		this.m.Bro = broData.createBro(::World.getTemporaryRoster());
-
 		this.m.Bro.getBackground().adjustHiringCostBasedOnEquipment();
-		this.m.Bro.getBaseProperties().DailyWageMult *= 1.25;
-		this.m.Bro.getCurrentProperties().DailyWageMult *= 1.25;
+
+		this.m.Demand = this.m.Bro.getHiringCost();
 
 		local weapon = this.m.Bro.getMainhandItem();
 		if (weapon != null && weapon.getID().find("banner") != null)
 		{
 			this.m.Bro.getItems().unequip(weapon);
 		}
-
-		this.m.Demand = ::Math.ceil(this.m.Bro.getHiringCost() * 1.25 * 0.1) * 10;
 
 		this.m.OriginalCompanyName = campaignData.getName();
 		this.m.OriginalCompanyBanner = campaignData.getBanner();
