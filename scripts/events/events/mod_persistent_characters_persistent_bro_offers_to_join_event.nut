@@ -40,20 +40,34 @@ this.mod_persistent_characters_persistent_bro_offers_to_join_event <- ::inherit(
 						break;
 				}
 
-				this.Options.push({
-					Text = "I\'ll pay you " + _event.m.Demand + " crowns up front and " + _event.m.Bro.getDailyCost() + " daily",
-					function getResult( _event )
-					{
-						return "AcceptWithCoin";
-					}
-				});
-				this.Options.push({
-					Text = "We don\'t need you",
-					function getResult( _event )
-					{
-						return "Reject";
-					}
-				});
+				if (::World.Assets.getMoney() >= _event.m.Demand)
+				{
+					this.Options.push({
+						Text = "I\'ll pay you " + _event.m.Demand + " crowns up front and " + _event.m.Bro.getDailyCost() + " daily",
+						function getResult( _event )
+						{
+							return "AcceptWithCoin";
+						}
+					});
+
+					this.Options.push({
+						Text = "We don\'t need you",
+						function getResult( _event )
+						{
+							return "Reject";
+						}
+					});
+				}
+				else
+				{
+					this.Options.push({
+						Text = "We cannot afford you (" + _event.m.Demand + " crowns up front and " + _event.m.Bro.getDailyCost() + " daily)",
+						function getResult( _event )
+						{
+							return "Reject";
+						}
+					});
+				}
 			}
 		});
 		this.m.Screens.push({
