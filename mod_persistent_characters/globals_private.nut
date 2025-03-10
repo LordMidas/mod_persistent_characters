@@ -160,11 +160,11 @@
 			if (broData.getCampaignUID() != ::ModPersistentCharacters.getCampaignUID() || broData.getLifetimeStats().len() > 1)
 			{
 				local stats = broData.getLifetimeStatsTotal();
-				str += format(" who has been on %i campaigns over the course of %i days, taking part in %i battles and making %i kills", broData.getLifetimeStats().len(), stats.Days, stats.Battles, stats.Kills)
+				str += format(" who has served in %i companies for %i days, taking part in %i battles and making %i kills", broData.getLifetimeStats().len(), stats.Days, stats.Battles, stats.Kills)
 			}
 			else
 			{
-				str += " who has not been on any other campaign so far";
+				str += " who has not served in any other company so far";
 			}
 		}
 
