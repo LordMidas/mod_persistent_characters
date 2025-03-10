@@ -224,6 +224,8 @@
 			item.setCondition(item.getConditionMax());
 		}
 
+		_bro.getSkills().update();
+
 		return _bro;
 	}
 
