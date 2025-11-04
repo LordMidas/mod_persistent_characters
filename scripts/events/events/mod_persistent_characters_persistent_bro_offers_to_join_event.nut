@@ -156,6 +156,9 @@ this.mod_persistent_characters_persistent_bro_offers_to_join_event <- ::inherit(
 
 	function onUpdateScore()
 	{
+		if (::World.getPlayerRoster().getAll().len() >= ::World.Assets.getBrothersMax())
+			return;
+
 		local currentCampaignUID = ::ModPersistentCharacters.getCampaignUID();
 		local currentBros = ::World.getPlayerRoster().getAll().filter(@(_, _b) _b.ModPersistentCharacters_getUID() != null && _b.ModPersistentCharacters_getCampaignUID() != currentCampaignUID);
 
