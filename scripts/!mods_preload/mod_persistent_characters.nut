@@ -15,6 +15,7 @@
 
 	::ModPersistentCharacters.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHub, "https://github.com/LordMidas/mod_persistent_characters");
 	::ModPersistentCharacters.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHub);
+	::ModPersistentCharacters.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.NexusMods, "https://www.nexusmods.com/battlebrothers/mods/927");
 
 	foreach (file in ::IO.enumerateFiles("mod_persistent_characters"))
 	{
