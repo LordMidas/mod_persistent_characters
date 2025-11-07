@@ -217,7 +217,7 @@ importPage.addButtonSetting("ImportBroFromFile_Button", "Import from File", "Imp
 		local broData = ::ModPersistentCharacters.Class.PersistentBroData();
 		broData.onDeserialize(data.getDeserializationEmulator());
 		local missingMods = broData.validateRequiredMods();
-		if (!missingMods)
+		if (missingMods != null)
 		{
 			::ModPersistentCharacters.Mod.ModSettings.getSetting("ErrorMessage").set("Cannot Import. Missing Mods: " + missingMods);
 		}
