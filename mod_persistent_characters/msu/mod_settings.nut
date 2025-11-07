@@ -10,7 +10,7 @@ generalPage.addRangeSetting("MinLevelToSave", 11, 1, 33, 1, "Min Level to Save",
 
 generalPage.addRangeSetting("RequiredRenown", 25, 1, 100, 1, "Renown Required (%)", "Persistent characters will only spawn in another campaign which has at least this much percentage of renown compared to their original campaign.");
 
-generalPage.addRangeSetting("MaxSavedCampaigns", 10, 1, 25, 1, "Max Saved Campaigns", "Persistent characters will only be saved for this many most recently saved campaigns. Higher numbers may lead to higher memory and performance impact.");
+generalPage.addRangeSetting("MaxSavedCampaigns", 10, 1, 25, 1, "Max Saved Campaigns", "Persistent characters will only be saved for this many most recently saved campaigns. Once this number is reached, when you save a new campaign, the oldest one\'s data will be deleted. Higher numbers may lead to higher memory and performance impact.");
 
 generalPage.addEnumSetting("SpawnWithPermanentInjuries", "None", ["None", "All", "Original", "Disallowed"], "Spawn with Permanent Injuries", "None: Persistent characters spawning in new campaigns will not carry over their permanent injuries.\nAll: Persistent characters will spawn with all the permanent injuries they have accumulated in all of their campaigns.\nOriginal: Persistent characters will spawn only with the permanent injuries that they received in their original campaign.\nDisallowed: Persistent characters who have received a permanent injury in any of their campaigns will not spawn in a new campaign.");
 
