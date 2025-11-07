@@ -56,7 +56,7 @@
 			this.removeBro(broUID);
 		}
 
-		return ::MSU.Array.removeByValue(this.BrosArray, delete this.Campaigns[_uid]);
+		return ::MSU.Array.removeByValue(this.CampaignsArray, delete this.Campaigns[_uid]);
 	}
 
 	function getCampaigns()
