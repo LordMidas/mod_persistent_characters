@@ -136,7 +136,7 @@ importPage.addButtonSetting("ImportBro_Button", "Import", "Import by UID", "Impo
 	local missingMods = broData.validateRequiredMods();
 	if (missingMods != null)
 	{
-		::ModPersistentCharacters.Mod.ModSettings.getSetting("ErrorMessage").set("Canont Import. Missing Mods: " + missingMods);
+		::ModPersistentCharacters.Mod.ModSettings.getSetting("ErrorMessage").set("Cannot Import. Missing Mods: " + missingMods);
 	}
 	else
 	{
@@ -219,7 +219,7 @@ importPage.addButtonSetting("ImportBroFromFile_Button", "Import from File", "Imp
 		local missingMods = broData.validateRequiredMods();
 		if (!missingMods)
 		{
-			::ModPersistentCharacters.Mod.ModSettings.getSetting("ErrorMessage").set("Canont Import. Missing Mods: " + missingMods);
+			::ModPersistentCharacters.Mod.ModSettings.getSetting("ErrorMessage").set("Cannot Import. Missing Mods: " + missingMods);
 		}
 		else
 		{
