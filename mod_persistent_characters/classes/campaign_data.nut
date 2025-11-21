@@ -104,7 +104,7 @@
 		_out.writeString(this.Name);
 		_out.writeString(this.Banner);
 		_out.writeU8(this.BannerID);
-		_out.writeU32(this.BusinessReputation);
+		_out.writeI32(this.BusinessReputation);
 		::MSU.Serialization.serialize(this.BroUIDs, _out);
 	}
 
@@ -114,7 +114,7 @@
 		this.Name = _in.readString();
 		this.Banner = _in.readString();
 		this.BannerID = _in.readU8();
-		this.BusinessReputation = _in.readU32();
+		this.BusinessReputation = _in.readI32();
 		this.BroUIDs = ::MSU.Serialization.deserialize(_in);
 	}
 }
