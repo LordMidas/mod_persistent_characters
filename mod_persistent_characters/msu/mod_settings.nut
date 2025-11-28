@@ -12,6 +12,10 @@ generalPage.addRangeSetting("RequiredRenown", 25, 1, 100, 1, "Renown Required (%
 
 generalPage.addRangeSetting("MaxSavedCampaigns", 10, 1, 25, 1, "Max Saved Campaigns", "Persistent characters will only be saved for this many most recently saved campaigns. Once this number is reached, when you save a new campaign, the oldest one\'s data will be deleted. Higher numbers may lead to higher memory and performance impact.");
 
+generalPage.addRangeSetting("CostMult_Hire", 3.0, 1.0, 5.0, 0.1, "Hiring Cost Mult", "The hiring cost of persistent characters in settlements is multiplied by this number.");
+generalPage.addRangeSetting("CostMult_EventHire", 2.0, 1.0, 5.0, 0.1, "Event Cost Mult", "The one time payment demand of persistent characters that offer to join you via event is multiplied by this number.");
+generalPage.addRangeSetting("CostMult_Wage", 1.5, 1.0, 5.0, 0.1, "Daily Wage Mult", "The daily wage of recruited persistent characters is multiplied by this number.");
+
 generalPage.addEnumSetting("SpawnWithPermanentInjuries", "None", ["None", "All", "Original", "Disallowed"], "Spawn with Permanent Injuries", "None: Persistent characters spawning in new campaigns will not carry over their permanent injuries.\nAll: Persistent characters will spawn with all the permanent injuries they have accumulated in all of their campaigns.\nOriginal: Persistent characters will spawn only with the permanent injuries that they received in their original campaign.\nDisallowed: Persistent characters who have received a permanent injury in any of their campaigns will not spawn in a new campaign.");
 
 generalPage.addBooleanSetting("PermaDeath", false, "Perma Death", "If enabled, then persistent characters who have died in any of their campaigns will not spawn in new campaigns. Don\'t worry, this setting is reversible i.e. if you disable it then characters who have died previously will be allowed to spawn again.");

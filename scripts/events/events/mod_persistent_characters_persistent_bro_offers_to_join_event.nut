@@ -210,7 +210,10 @@ this.mod_persistent_characters_persistent_bro_offers_to_join_event <- ::inherit(
 		this.m.Bro = broData.createBro(::World.getTemporaryRoster());
 		this.m.Bro.getBackground().adjustHiringCostBasedOnEquipment();
 
-		this.m.Demand = this.m.Bro.getHiringCost();
+		// We divide by the CostMult_Hire because that multiplier is already applied during `adjustHiringCostBasedOnEquipment`.
+		// So we divide by it to revert its effect.
+		this.m.Demand = this.m.Bro.getHiringCost() * ::ModPersistentCharacters.Mod.ModSettings.getSetting("CostMult_EventHire").getValue() / ::ModPersistentCharacters.Mod.ModSettings.getSetting("CostMult_Hire").getValue();
+		this.m.Demand = ::Math.ceil(this.m.Demand * 0.1) * 10;
 
 		local weapon = this.m.Bro.getMainhandItem();
 		if (weapon != null && weapon.getID().find("banner") != null)
