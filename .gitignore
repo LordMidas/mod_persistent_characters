@@ -1,6 +1,7 @@
 *.sublime-workspace
 *.sublime-project
 .bbbuilder/
+.vscode/
 brushes/
 gfx/*.png
 !gfx/*/.png
