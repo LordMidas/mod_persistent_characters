@@ -17,6 +17,18 @@
 		this.BroUIDs = [];
 	}
 
+	function toUIData()
+	{
+		return {
+			Name = this.Name,
+			Banner = this.Banner,
+			BusinessReputation = this.BusinessReputation,
+			BroUIDs = this.BroUIDs,
+			UID = this.UID,
+			MissingMods = this.validateRequiredMods()
+		};
+	}
+
 	function getUID()
 	{
 		return this.UID;

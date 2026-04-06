@@ -21,6 +21,9 @@
 	{
 		::include(file);
 	}
+
+	::Hooks.registerJS("ui/mods/mod_persistent_characters/screens/persistent_characters_screen.js");
+	::Hooks.registerCSS("ui/mods/mod_persistent_characters/screens/persistent_characters_screen.css");
 });
 
 ::ModPersistentCharacters.MH.queue(function() {
@@ -31,4 +34,9 @@
 		LastDrinkTime = player.m.LastDrinkTime,
 		LifetimeStats = clone player.m.LifetimeStats
 	};
+
+	::ModPersistentCharacters.Screen <- ::new("scripts/ui/mods/screens/persistent_characters_screen");
+	::MSU.UI.registerConnection(::ModPersistentCharacters.Screen);
+
+	::ModPersistentCharacters.Mod.Keybinds.addSQKeybind("toggleScreen", "ctrl+p", ::MSU.Key.State.All, ::ModPersistentCharacters.Screen.toggle.bindenv(::ModPersistentCharacters.Screen));
 }, ::Hooks.QueueBucket.AfterHooks);
