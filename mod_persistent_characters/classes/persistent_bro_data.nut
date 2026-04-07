@@ -57,6 +57,27 @@
 		}
 	}
 
+	function toUIData()
+	{
+		local background = _entity.getBackground();
+		return {
+			ID = _entity.getID(),
+			Name = _entity.getName(),
+			Level = _entity.getLevel(),
+			InitialMoneyCost = 90,
+			DailyMoneyCost = _entity.getDailyCost(),
+			DailyFoodCost = _entity.getDailyFood(),
+			TryoutCost = 100,
+			IsTryoutDone = true,
+			ImagePath = _entity.getImagePath(),
+			ImageOffsetX = _entity.getImageOffsetX(),
+			ImageOffsetY = _entity.getImageOffsetY(),
+			BackgroundImagePath = background.getIconColored(),
+			BackgroundText = background.getDescription(),
+			Traits = _entity.getHiringTraits()
+		};
+	}
+
 	function update( _bro )
 	{
 		this.Name = _bro.getName();

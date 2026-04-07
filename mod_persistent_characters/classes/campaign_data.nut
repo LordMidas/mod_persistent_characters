@@ -19,13 +19,14 @@
 
 	function toUIData()
 	{
+		local reqMods = this.validateRequiredMods();
 		return {
 			Name = this.Name,
 			Banner = this.Banner,
 			BusinessReputation = this.BusinessReputation,
 			BroUIDs = this.BroUIDs,
 			UID = this.UID,
-			MissingMods = this.validateRequiredMods()
+			MissingMods = reqMods == null ? null : ::String.replace(reqMods, ",", "%%")
 		};
 	}
 

@@ -122,7 +122,7 @@ ModPersistentCharactersScreen.prototype.createDIV = function (_parentDiv)
         _image.removeClass('opacity-none');
     }, null, 'opacity-none');
     detailsColumn = $('<div class="column is-character-background-container"/>');
-    detailsRow.append(detailsColumn);
+	detailsRow.append(detailsColumn);
 
     // details: background
     var backgroundRow = $('<div class="row is-top"/>');
@@ -229,11 +229,23 @@ ModPersistentCharactersScreen.prototype.createDIV = function (_parentDiv)
         self.notifyBackendLeaveButtonPressed();
     }, '', 1);
 
-    this.mIsVisible = false;
+	this.mIsVisible = false;
+
+   this.mDetailsPanel.CharacterBackgroundPerksContainer = $("<div class='hire-screen-perks-container'/>")
+		.append($("<div class='name title-font-normal font-bold font-color-brother-name'>Perks</div>"))
+		.hide()
+		.appendTo(this.mDetailsPanel.Container);
+
+	this.mDetailsPanel.mPerksModule = new DynamicPerks.GenericPerksModule(this.mDetailsPanel.CharacterBackgroundPerksContainer);
 };
 
 ModPersistentCharactersScreen.prototype.destroyDIV = function ()
 {
+	this.mDetailsPanel.mPerksModule.destroyDIV();
+	this.mDetailsPanel.mPerksModule = null;
+	this.mDetailsPanel.CharacterBackgroundPerksContainer.remove();
+	this.mDetailsPanel.CharacterBackgroundPerksContainer = null;
+
 	this.mAssets.destroyDIV();
 
 	this.mSelectedEntry = null;
@@ -314,6 +326,25 @@ ModPersistentCharactersScreen.prototype.loadFromData = function (_data)
     // this.selectListEntry(this.mCampaignListContainer.findListEntryByIndex(0), true);
 };
 
+ModPersistentCharactersScreen.prototype.loadBroData = function (_data)
+{
+    if (_data === undefined || _data === null || !jQuery.isArray(_data))
+    {
+        return;
+    }
+
+	// this.mCampaigns = _data;
+
+    this.mListScrollContainer.empty();
+
+    for(var i = 0; i < _data.length; ++i)
+    {
+        this.addListEntry(_data[i]);
+    }
+
+    // this.selectListEntry(this.mCampaignListContainer.findListEntryByIndex(0), true);
+};
+
 ModPersistentCharactersScreen.prototype.addCampaignListEntry = function (_data)
 {
 	var self = this;
@@ -324,39 +355,49 @@ ModPersistentCharactersScreen.prototype.addCampaignListEntry = function (_data)
 	entry.assignListCampaignGroupName(_data.Name);
 	if (_data.MissingMods !== null)
 	{
-		entry.assignListCampaignDayName("Missing Mods: " + _data.MissingMods);
-    	entry.addClass('is-disabled');
+		entry.assignListCampaignDayName("Missing Mods");
+		entry.addClass('is-disabled');
+		entry.bindTooltip({ contentType: "msu-generic", modId: this.mModID, elementId: "CampaignEntry+MissingMods:" + _data.MissingMods + ",Name:" + _data.Name});
 	}
     else
     {
-    	entry.assignListCampaignDayName("Renown: " + _data.BusinessReputation);
+		entry.assignListCampaignDayName("Renown: " + _data.BusinessReputation);
+		entry.assignListCampaignClickHandler(function (_entry, _event)
+		{
+			// check if this is already selected
+			if (_entry.hasClass('is-selected') !== true)
+			{
+				// deselect all entries first
+				self.mCampaignListScrollContainer.find('.is-selected:first').each(function (index, el)
+				{
+					$(el).removeClass('is-selected');
+				});
+
+				_entry.addClass('is-selected');
+
+				// self.mIsNewSavegame = false;
+				// self.loadBroData(_data.UID);
+				self.notifyBackendCampaignSelected(_data.UID);
+
+				// self.mSaveButton.enableButton(true);
+				// self.mDeleteButton.enableButton(true);
+			}
+		});
     }
 
     // if (CampaignMenuModulesIdentifier.Campaign.CreationDate in _data)
     // {
     //     entry.assignListCampaignDateTime(_data[CampaignMenuModulesIdentifier.Campaign.CreationDate]);
     // }
-
-    // entry.assignListCampaignClickHandler(function (_entry, _event)
-    // {
-    //     // check if this is already selected
-    //     if (_entry.hasClass('is-selected') !== true)
-    //     {
-    //         // deselect all entries first
-    //         self.mListScrollContainer.find('.is-selected:first').each(function (index, el)
-    //         {
-    //             $(el).removeClass('is-selected');
-    //         });
-
-    //         _entry.addClass('is-selected');
-
-	// 		self.mIsNewSavegame = false;
-
-    //         self.mSaveButton.enableButton(true);
-    //         self.mDeleteButton.enableButton(true);
-    //     }
-    // });
 }
+
+ModPersistentCharactersScreen.prototype.notifyBackendCampaignSelected = function ( _campaignUID )
+{
+    if (this.mSQHandle !== null)
+    {
+        SQ.call(this.mSQHandle, 'onCampaignSelected', _campaignUID);
+    }
+};
 
 ModPersistentCharactersScreen.prototype.updateListEntryValues = function()
 {
@@ -370,7 +411,7 @@ ModPersistentCharactersScreen.prototype.updateListEntryValues = function()
         var data = entry.data('entry');
         var initialMoneyCost = data['InitialMoneyCost'];
         initialMoneyCostElement.html(Helper.numberWithCommas(data[WorldTownScreenIdentifier.HireRosterEntry.InitialMoneyCost]));
-        if (currentMoney < initialMoneyCost)
+        if (false && currentMoney < initialMoneyCost)
         {
         	initialMoneyCostElement.removeClass('font-color-subtitle').addClass('font-color-assets-negative-value');
         }
@@ -398,6 +439,48 @@ ModPersistentCharactersScreen.prototype.updateListEntryValues = function()
     });
 };
 
+ModPersistentCharactersScreen.prototype.updateDetailsPanel = function(_element)
+{
+	if (_element !== null && _element.length > 0)
+    {
+        // var currentMoney = this.mAssets.getValues().Money;
+        var data = _element.data('entry');
+        var initialMoneyCost = data['InitialMoneyCost'];
+        var tryoutMoneyCost = data['TryoutCost'];
+
+        this.mDetailsPanel.CharacterImage.attr('src', Path.PROCEDURAL + data['ImagePath']);
+
+        // retarded JS calls load callback after a significant delay only - so we call this here manually to position/resize an image that is completely loaded already anyway
+        this.mDetailsPanel.CharacterImage.centerImageWithinParent(0, 0, 1.0);
+
+        this.mDetailsPanel.CharacterName.html(data['Name']);
+        this.mDetailsPanel.CharacterBackgroundImage.attr('src', Path.GFX + data['BackgroundImagePath']);
+        this.mDetailsPanel.DailyMoneyCostsText.html(Helper.numberWithCommas(data['DailyMoneyCost']));
+        //this.mDetailsPanel.DailyFoodCostsText.html(Helper.numberWithCommas(data['DailyFoodCost']));
+
+        this.mDetailsPanel.CharacterTraitsContainer.empty();
+
+        for(var i = 0; i < data.Traits.length; ++i)
+		{
+			var icon = $('<img src="' + Path.GFX + data.Traits[i].icon + '"/>');
+			icon.bindTooltip({ contentType: 'status-effect', entityId: data.ID, statusEffectId: data.Traits[i].id });
+			this.mDetailsPanel.CharacterTraitsContainer.append(icon);
+		}
+
+        // bin tooltips
+        this.mDetailsPanel.CharacterBackgroundImage.bindTooltip({ contentType: 'ui-element', elementId: TooltipIdentifier.CharacterBackgrounds.Generic, elementOwner: TooltipIdentifier.ElementOwner.HireScreen, entityId: data.ID });
+
+        this.mDetailsPanel.Container.removeClass('display-none').addClass('display-block');
+    }
+    else
+    {
+        this.mDetailsPanel.Container.removeClass('display-block').addClass('display-none');
+    }
+
+	this.mDetailsPanel.mPerksModule.loadFromData(_element.data('entry').perkTree);
+	this.mDetailsPanel.CharacterBackgroundPerksContainer.show();
+};
+
 ModPersistentCharactersScreen.prototype.selectListEntry = function(_element, _scrollToEntry)
 {
     if (_element !== null && _element.length > 0)
@@ -415,14 +498,14 @@ ModPersistentCharactersScreen.prototype.selectListEntry = function(_element, _sc
             }
 
             this.mSelectedEntry = _element;
-            // this.updateDetailsPanel(this.mSelectedEntry);
+            this.updateDetailsPanel(this.mSelectedEntry);
             this.updateListEntryValues();
         }
     }
     else
     {
         this.mSelectedEntry = null;
-        // this.updateDetailsPanel(this.mSelectedEntry);
+        this.updateDetailsPanel(this.mSelectedEntry);
         this.updateListEntryValues();
     }
 };
@@ -439,7 +522,7 @@ ModPersistentCharactersScreen.prototype.addListEntry = function (_data)
 	{
         var self = _event.data;
         self.selectListEntry($(this));
-    });
+	});
 
     // left column
     var column = $('<div class="column is-left"/>');
@@ -447,11 +530,12 @@ ModPersistentCharactersScreen.prototype.addListEntry = function (_data)
 
     var imageOffsetX = ('ImageOffsetX' in _data ? _data['ImageOffsetX'] : 0);
     var imageOffsetY = ('ImageOffsetY' in _data ? _data['ImageOffsetY'] : 0);
-    column.createImage(Path.PROCEDURAL + _data['ImagePath'], function (_image)
+    var portrait = column.createImage(Path.PROCEDURAL + _data['ImagePath'], function (_image)
 	{
         _image.centerImageWithinParent(imageOffsetX, imageOffsetY, 0.64, false);
         _image.removeClass('opacity-none');
-    }, null, 'opacity-none');
+	}, null, 'opacity-none');
+	portrait.bindTooltip({ contentType: 'ui-element', elementId: TooltipIdentifier.CharacterBackgrounds.Generic, elementOwner: TooltipIdentifier.ElementOwner.HireScreen, entityId: _data.ID });
 
     // right column
     column = $('<div class="column is-right"/>');
@@ -527,75 +611,6 @@ ModPersistentCharactersScreen.prototype.addListEntry = function (_data)
     text = $('<div class="label is-daily-food-cost text-font-normal font-color-assets-positive-value">' + Helper.numberWithCommas(_data[WorldTownScreenIdentifier.HireRosterEntry.DailyFoodCost]) + '</div>');
     assetsContainer.append(text);
     */
-};
-
-WorldTownScreenMainDialogModule.prototype.show = function (_withSlideAnimation)
-{
-	var self = this;
-
-	var withAnimation = (_withSlideAnimation !== undefined && _withSlideAnimation !== null) ? _withSlideAnimation : true;
-	if (withAnimation === true)
-	{
-		var offset = this.mContainer.parent().width() + this.mContainer.width();
-		this.mContainer.css({ 'translateX': offset });
-		this.mContainer.velocity("finish", true).velocity({ opacity: 1, translateX: 0 },
-        {
-        	duration: Constants.SCREEN_SLIDE_IN_OUT_DELAY,
-        	easing: 'swing',
-        	begin: function ()
-        	{
-        		$(this).removeClass('display-none').addClass('display-block');
-        		// self.notifyBackendModuleAnimating();
-        	},
-        	complete: function ()
-        	{
-        		self.mIsVisible = true;
-        		// self.notifyBackendModuleShown();
-        	}
-        });
-	}
-	else
-	{
-		this.mContainer.css({ opacity: 0 });
-		this.mContainer.velocity("finish", true).velocity({ opacity: 1 },
-        {
-        	duration: Constants.SCREEN_FADE_IN_OUT_DELAY,
-        	easing: 'swing',
-        	begin: function ()
-        	{
-        		$(this).removeClass('display-none').addClass('display-block');
-        		// self.notifyBackendModuleAnimating();
-        	},
-        	complete: function ()
-        	{
-        		self.mIsVisible = true;
-        		// self.notifyBackendModuleShown();
-        	}
-        });
-	}
-};
-
-WorldTownScreenMainDialogModule.prototype.hide = function ()
-{
-	var self = this;
-
-	var offset = this.mContainer.parent().width() + this.mContainer.width();
-	this.mContainer.velocity("finish", true).velocity({ opacity: 0, translateX: offset },
-    {
-    	duration: Constants.SCREEN_SLIDE_IN_OUT_DELAY,
-    	easing: 'swing',
-    	begin: function ()
-    	{
-    		$(this).removeClass('is-center');
-    		self.notifyBackendModuleAnimating();
-    	},
-    	complete: function ()
-    	{
-    		self.mIsVisible = false;
-    		$(this).removeClass('display-block').addClass('display-none');
-    		self.notifyBackendModuleHidden();
-    	}
-    });
 };
 
  registerScreen("ModPersistentCharactersScreen", new ModPersistentCharactersScreen());

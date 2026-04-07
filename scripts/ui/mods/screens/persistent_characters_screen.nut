@@ -1,7 +1,8 @@
 this.persistent_characters_screen <- ::inherit("scripts/mods/msu/ui_screen" {
 	m = {
 		ID = "ModPersistentCharactersScreen",
-		RosterID = ::toHash("ModPersistentCharactersRoster")
+		RosterID = ::toHash("ModPersistentCharactersRoster"),
+		Roster = null
 	},
 
 	function toggle()
@@ -17,15 +18,51 @@ this.persistent_characters_screen <- ::inherit("scripts/mods/msu/ui_screen" {
 
 	function show( _data )
 	{
-		::logInfo("show");
-		this.ui_screen.show(_data);
+		// this.ui_screen.show(_data);
+
+		this.m.Roster = ::World.createRoster(this.m.RosterID);
+
+		local activeState = ::MSU.Utils.getActiveState();
+		activeState.onHide();
+		::Cursor.setCursor(::Const.UI.Cursor.Hand);
+		switch(activeState.ClassName)
+		{
+			case "world_state":
+				activeState.setAutoPause(true);
+				activeState.m.MenuStack.push(function ()
+				{
+					::ModPersistentCharacters.Screen.hide();
+					this.onShow();
+					this.setAutoPause(false);
+				});
+				break;
+
+			case "main_menu_state":
+				activeState.m.MenuStack.push(function ()
+				{
+					::ModPersistentCharacters.Screen.hide();
+					this.onShow();
+				});
+				break;
+		}
+		// this.Tooltip.hide();
+		// this.m.JSHandle.asyncCall("setData", this.queryData());
+		this.m.JSHandle.asyncCall("show", null);
 		this.m.JSHandle.asyncCall("loadFromData", this.queryCampaignData());
+		return false;
 	}
 
 	function hide()
 	{
 		::World.deleteRoster(this.m.RosterID);
-		this.ui_screen.hide();
+		if (this.isVisible())
+		{
+			local activeState = ::MSU.Utils.getActiveState();
+			this.m.JSHandle.asyncCall("hide", null);
+			activeState.m.MenuStack.pop();
+			return false
+		}
+		// this.ui_screen.hide();
 	}
 
 	function queryCampaignData()
@@ -33,42 +70,17 @@ this.persistent_characters_screen <- ::inherit("scripts/mods/msu/ui_screen" {
 		return ::ModPersistentCharacters.DataManager.CampaignsArray.map(@(_c) _c.toUIData());
 	}
 
-	function queryHireInformation()
+	function onCampaignSelected( _campaignUID )
 	{
-		local r = ::World.createRoster(this.m.RosterID);
-		foreach (broData in ::ModPersistentCharacters.DataManager.getBros())
+		local bros = [];
+		foreach (broUID in ::ModPersistentCharacters.DataManager.getCampaign(_campaignUID).getBroUIDs())
 		{
-			broData.createBro(r);
+			local broData = ::ModPersistentCharacters.DataManager.getBro(broUID);
+			local bro = broData.createBro(this.m.Roster);
+			bros.push(bro);
 		}
-		return this.convertHireRosterToUIData(this.m.RosterID);
-	}
-
-	function convertHireRosterToUIData( _rosterID )
-	{
-		local result = [];
-		local roster = this.World.getRoster(_rosterID);
-		// local roster = ::World.getPlayerRoster();
-
-		if (roster == null)
-		{
-			return null;
-		}
-
-		local entities = roster.getAll();
-
-		if (entities != null)
-		{
-			local result = [];
-
-			foreach( entity in entities )
-			{
-				result.push(this.convertEntityToUIData(entity));
-			}
-
-			return result;
-		}
-
-		return null;
+		local self = this;
+		this.m.JSHandle.asyncCall("loadBroData", bros.map(@(_b) self.convertEntityToUIData(_b)));
 	}
 
 	function convertEntityToUIData( _entity )
@@ -82,13 +94,14 @@ this.persistent_characters_screen <- ::inherit("scripts/mods/msu/ui_screen" {
 			DailyMoneyCost = _entity.getDailyCost(),
 			DailyFoodCost = _entity.getDailyFood(),
 			TryoutCost = 100,
-			IsTryoutDone = false,
+			IsTryoutDone = true,
 			ImagePath = _entity.getImagePath(),
 			ImageOffsetX = _entity.getImageOffsetX(),
 			ImageOffsetY = _entity.getImageOffsetY(),
 			BackgroundImagePath = background.getIconColored(),
 			BackgroundText = background.getDescription(),
-			Traits = _entity.getHiringTraits()
+			Traits = _entity.getHiringTraits(),
+			perkTree = _entity.getPerkTree().toUIData()
 		};
 	}
 });
