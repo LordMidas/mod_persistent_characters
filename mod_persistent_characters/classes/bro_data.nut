@@ -10,21 +10,24 @@
 	{
 		if (!::MSU.isNull(_bro))
 		{
-			if (_bro instanceof ::WeakTableRef)
-				_bro = _bro.get();
+			this.capture(_bro instanceof ::WeakTableRef ? _bro.get() : _bro);
+		}
+	}
 
-			this.Script = ::IO.scriptFilenameByHash(_bro.ClassNameHash);
+	// Takes a snapshot of the bro which is used to recreate him via createBro
+	function capture( _bro )
+	{
+		this.Script = ::IO.scriptFilenameByHash(_bro.ClassNameHash);
 
-			this.SerData = ::MSU.Class.SerializationData();
-			_bro.onSerialize(this.SerData.getSerializationEmulator());
+		this.SerData = ::MSU.Class.SerializationData();
+		_bro.onSerialize(this.SerData.getSerializationEmulator());
 
-			this.SpriteData = {};
-			foreach (spriteName in this.getSpritesToSave())
+		this.SpriteData = {};
+		foreach (spriteName in this.getSpritesToSave())
+		{
+			if (_bro.hasSprite(spriteName))
 			{
-				if (_bro.hasSprite(spriteName))
-				{
-					this.SpriteData[spriteName] <- ::ModPersistentCharacters.Class.SpriteData(_bro.getSprite(spriteName));
-				}
+				this.SpriteData[spriteName] <- ::ModPersistentCharacters.Class.SpriteData(_bro.getSprite(spriteName));
 			}
 		}
 	}

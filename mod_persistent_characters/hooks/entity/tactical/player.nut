@@ -16,14 +16,14 @@
 
 		if (_fatalityType != ::Const.FatalityType.Unconscious)
 		{
-			local myUID = this.ModPersistentCharacters_getUID();
-			if (myUID != null && ::ModPersistentCharacters.getDataManager().hasBro(myUID))
+			local broData = ::ModPersistentCharacters.getDataManager().getBro(this.ModPersistentCharacters_getUID());
+			local campaignUID = ::ModPersistentCharacters.getCampaignUID();
+			if (broData != null && campaignUID != null)
 			{
-				local stats = ::ModPersistentCharacters.getDataManager().getBro(myUID).getLifetimeStats(::ModPersistentCharacters.getCampaignUID());
-				if (stats != null)
-				{
-					stats.setDead(true);
-				}
+				local stats = broData.getLifetimeStats(campaignUID);
+				if (stats == null)
+					stats = broData.updateLifetimeStats(this, campaignUID);
+				stats.setDead(true);
 			}
 		}
 	}

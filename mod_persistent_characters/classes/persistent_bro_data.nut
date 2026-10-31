@@ -1,35 +1,44 @@
 ::ModPersistentCharacters.Class.PersistentBroData <- class extends ::ModPersistentCharacters.Class.BroData
 {
 	UID = null;
+	// UID of the home campaign of this bro. Only the home campaign refreshes his snapshot.
+	// In other campaigns he is "on loan" and those campaigns only add to his lifetime stats.
 	CampaignUID = null;
 	Name = null;
 	Level = 1;
+	// modID -> modName of the mods which were required when the snapshot was captured
 	RequiredMods = null;
+	// Information about the home campaign so that it is available even after the campaign is removed
+	HomeName = "";
+	HomeBanner = "";
+	HomeRenown = 0;
+	// campaignUID -> LifetimeStats
 	LifetimeStats = null;
-	LifetimeStatsTotal = null;
 
 	constructor( _bro = null )
 	{
+		this.RequiredMods = {};
+		this.LifetimeStats = {};
+
 		if (::MSU.isNull(_bro))
 		{
 			base.constructor(_bro);
 			return;
 		}
 
+		if (_bro instanceof ::WeakTableRef)
+			_bro = _bro.get();
+
 		this.UID = _bro.ModPersistentCharacters_getUID();
 		this.CampaignUID = _bro.ModPersistentCharacters_getCampaignUID();
+		base.constructor(_bro);
+	}
+
+	function capture( _bro )
+	{
 		this.Name = _bro.getName();
 		this.Level = _bro.getLevel();
-		this.RequiredMods = clone ::ModPersistentCharacters.RequiredMods;
-		this.LifetimeStats = {};
-		this.LifetimeStatsTotal = {
-			Kills = 0,
-			Battles = 0,
-			Days = 0,
-			Deaths = 0,
-			PermanentInjuries = []
-		};
-		this.updateLifetimeStats(_bro, this.CampaignUID);
+		this.RequiredMods = ::ModPersistentCharacters.getRequiredMods();
 
 		local backup = {};
 		foreach (k, v in ::ModPersistentCharacters.PlayerFieldsToClean)
@@ -44,7 +53,7 @@
 			s.m.IsSerialized = false;
 		}
 
-		base.constructor(_bro);
+		base.capture(_bro);
 
 		foreach (s in skills)
 		{
@@ -57,12 +66,22 @@
 		}
 	}
 
+	function setHomeInfo( _campaignData )
+	{
+		this.HomeName = _campaignData.getName();
+		this.HomeBanner = _campaignData.getBanner();
+		this.HomeRenown = _campaignData.getBusinessReputation();
+	}
+
+	// Called during saving of the current campaign for a bro who is in its roster
 	function update( _bro )
 	{
-		this.Name = _bro.getName();
-		this.Level = _bro.getLevel();
-		this.RequiredMods = clone ::ModPersistentCharacters.RequiredMods;
-		this.updateLifetimeStats(_bro, this.CampaignUID);
+		local currentCampaignUID = ::ModPersistentCharacters.getCampaignUID();
+		if (this.isHome(currentCampaignUID))
+		{
+			this.capture(_bro);
+		}
+		this.updateLifetimeStats(_bro, currentCampaignUID);
 	}
 
 	function getSkillsToPrevent( _bro )
@@ -77,30 +96,8 @@
 
 	function updateLifetimeStats( _bro, _campaignUID )
 	{
-		local stats;
-		if (_campaignUID in this.getLifetimeStats())
-		{
-			stats = this.getLifetimeStats(_campaignUID);
-			this.LifetimeStatsTotal.Kills -= stats.Kills;
-			this.LifetimeStatsTotal.Battles -= stats.Battles;
-			this.LifetimeStatsTotal.Days -= stats.Days;
-			this.LifetimeStatsTotal.Deaths -= stats.IsDead ? 1 : 0;
-		}
-
-		stats = ::ModPersistentCharacters.Class.LifetimeStats(_bro);
+		local stats = ::ModPersistentCharacters.Class.LifetimeStats(_bro);
 		this.LifetimeStats[_campaignUID] <- stats;
-		this.LifetimeStatsTotal.Kills += stats.Kills;
-		this.LifetimeStatsTotal.Battles += stats.Battles;
-		this.LifetimeStatsTotal.Days += stats.Days;
-		this.LifetimeStatsTotal.Deaths += stats.IsDead ? 1 : 0;
-
-		this.LifetimeStatsTotal.PermanentInjuries.clear();
-		foreach (s in this.getLifetimeStats())
-		{
-			this.LifetimeStatsTotal.PermanentInjuries.extend(s.getPermanentInjuries());
-		}
-		this.LifetimeStatsTotal.PermanentInjuries = ::MSU.Array.uniques(this.LifetimeStatsTotal.PermanentInjuries);
-
 		return stats;
 	}
 
@@ -112,6 +109,36 @@
 	function getCampaignUID()
 	{
 		return this.CampaignUID;
+	}
+
+	function getHomeCampaignUID()
+	{
+		return this.CampaignUID;
+	}
+
+	function setHomeCampaignUID( _uid )
+	{
+		this.CampaignUID = _uid;
+	}
+
+	function isHome( _campaignUID )
+	{
+		return _campaignUID != null && this.CampaignUID == _campaignUID;
+	}
+
+	function getHomeName()
+	{
+		return this.HomeName;
+	}
+
+	function getHomeBanner()
+	{
+		return this.HomeBanner;
+	}
+
+	function getHomeRenown()
+	{
+		return this.HomeRenown;
 	}
 
 	function getName()
@@ -129,6 +156,28 @@
 		return this.RequiredMods;
 	}
 
+	// Returns an array of { ID, Name } of required mods which are not installed
+	function getMissingMods()
+	{
+		local ret = [];
+		foreach (modID, modName in this.RequiredMods)
+		{
+			if (!::Hooks.hasMod(modID))
+				ret.push({ ID = modID, Name = modName });
+		}
+		return ret;
+	}
+
+	function isLoadable()
+	{
+		foreach (modID, _ in this.RequiredMods)
+		{
+			if (!::Hooks.hasMod(modID))
+				return false;
+		}
+		return true;
+	}
+
 	function getLifetimeStats( _campaignUID = null )
 	{
 		if (_campaignUID == null)
@@ -141,66 +190,86 @@
 
 	function getLifetimeStatsTotal()
 	{
-		return this.LifetimeStatsTotal;
+		local ret = {
+			Kills = 0,
+			Battles = 0,
+			Days = 0,
+			Deaths = 0,
+			PermanentInjuries = []
+		};
+
+		foreach (stats in this.LifetimeStats)
+		{
+			ret.Kills += stats.getKills();
+			ret.Battles += stats.getBattles();
+			ret.Days += stats.getDays();
+			if (stats.isDead())
+				ret.Deaths++;
+			ret.PermanentInjuries.extend(stats.getPermanentInjuries());
+		}
+		ret.PermanentInjuries = ::MSU.Array.uniques(ret.PermanentInjuries);
+
+		return ret;
 	}
 
-	function validateRequiredMods()
+	// Returns a sentence summarizing the lifetime stats across all campaigns
+	function getServiceSummary()
 	{
-		local ret = "";
-		foreach (modID in this.getRequiredMods())
-		{
-			if (!::Hooks.hasMod(modID))
-			{
-				ret += modID + ", ";
-			}
-		}
-		if (ret != "")
-			return ret.slice(0, -2);
+		local stats = this.getLifetimeStatsTotal();
+		local numCompanies = this.LifetimeStats.len();
+		local ret = format("Has served in %i %s for %i days, taking part in %i battles and making %i kills", numCompanies, numCompanies == 1 ? "company" : "companies", stats.Days, stats.Battles, stats.Kills);
+		if (stats.Deaths > 0)
+			ret += ". " + ::MSU.Text.colorNegative(format("Died in %i %s", stats.Deaths, stats.Deaths == 1 ? "company" : "companies"));
+		return ret;
+	}
+
+	// Returns null if the bro can spawn, otherwise a string with the reason
+	function getCannotSpawnReason()
+	{
+		if (!this.isLoadable())
+			return "Missing required mods";
+
+		if (this.getLevel() < ::ModPersistentCharacters.Mod.ModSettings.getSetting("MinLevelToSpawn").getValue())
+			return "Below the minimum level to spawn";
+
+		if (::ModPersistentCharacters.hasBlockedBro(this.getUID()))
+			return "Already present in this campaign";
+
+		if (::ModPersistentCharacters.Mod.ModSettings.getSetting("SpawnWithPermanentInjuries").getValue() == "Disallowed" && this.hasPermanentInjury())
+			return "Has a permanent injury and spawning with permanent injuries is disallowed";
+
+		if (::ModPersistentCharacters.Mod.ModSettings.getSetting("PermaDeath").getValue() && this.getLifetimeStatsTotal().Deaths > 0)
+			return "Has died and Perma Death is enabled";
+
+		return null;
 	}
 
 	function canSpawn()
 	{
-		if (this.getLevel() < ::ModPersistentCharacters.Mod.ModSettings.getSetting("MinLevelToSpawn").getValue())
-			return false;
-
-		if (::ModPersistentCharacters.hasBlockedBro(this.getUID()))
-			return false;
-
-		switch (::ModPersistentCharacters.Mod.ModSettings.getSetting("SpawnWithPermanentInjuries").getValue())
-		{
-			case "Original":
-				if (this.getLifetimeStats(this.getCampaignUID()) != null && this.getLifetimeStats(this.getCampaignUID()).getPermanentInjuries().len() != 0)
-					return false;
-
-			case "Disallowed":
-				if (this.hasPermanentInjury())
-					return false;
-		}
-
-		if (::ModPersistentCharacters.Mod.ModSettings.getSetting("PermaDeath").getValue() && this.getLifetimeStatsTotal().Deaths > 0)
-			return false;
-
-		if (this.validateRequiredMods() != null)
-			return false;
-
-		return true;
+		return this.getCannotSpawnReason() == null;
 	}
 
 	function hasPermanentInjury()
 	{
-		return this.LifetimeStatsTotal.PermanentInjuries.len() != 0;
+		foreach (stats in this.LifetimeStats)
+		{
+			if (stats.getPermanentInjuries().len() != 0)
+				return true;
+		}
+		return false;
 	}
 
-	function createBro( _roster = null )
+	// If _applySpawnSettings is false, the bro is created as he was saved e.g. for previewing him
+	function createBro( _roster = null, _applySpawnSettings = true )
 	{
-		return this.cleanUpCreatedBro(base.createBro(_roster));
+		return this.cleanUpCreatedBro(base.createBro(_roster), _applySpawnSettings);
 	}
 
-	function cleanUpCreatedBro( _bro )
+	function cleanUpCreatedBro( _bro, _applySpawnSettings = true )
 	{
 		_bro.getFlags().remove("IsPlayerCharacter");
 
-		switch (::ModPersistentCharacters.Mod.ModSettings.getSetting("SpawnWithPermanentInjuries").getValue())
+		switch (_applySpawnSettings ? ::ModPersistentCharacters.Mod.ModSettings.getSetting("SpawnWithPermanentInjuries").getValue() : null)
 		{
 			case "None":
 				_bro.getSkills().removeByType(::Const.SkillType.PermanentInjury);
@@ -232,40 +301,46 @@
 	function onSerialize( _out )
 	{
 		base.onSerialize(_out);
-		_out.writeString(this.UID);
-		_out.writeString(this.CampaignUID);
+		// UIDs are null for bros exported without persistence data
+		_out.writeString(this.UID == null ? "" : this.UID);
+		_out.writeString(this.CampaignUID == null ? "" : this.CampaignUID);
 		_out.writeString(this.Name);
 		_out.writeU8(this.Level);
 		::MSU.Serialization.serialize(this.RequiredMods, _out);
+		_out.writeString(this.HomeName);
+		_out.writeString(this.HomeBanner);
+		_out.writeI32(this.HomeRenown);
 
 		_out.writeU32(this.LifetimeStats.len());
 		foreach (campaignUID, stats in this.LifetimeStats)
 		{
-			stats.onSerialize(_out);
 			_out.writeString(campaignUID);
+			stats.onSerialize(_out);
 		}
-
-		::MSU.Serialization.serialize(this.LifetimeStatsTotal, _out);
 	}
 
 	function onDeserialize( _in )
 	{
-		base.onDeserialize(_in)
+		base.onDeserialize(_in);
 		this.UID = _in.readString();
+		if (this.UID == "") this.UID = null;
 		this.CampaignUID = _in.readString();
+		if (this.CampaignUID == "") this.CampaignUID = null;
 		this.Name = _in.readString();
 		this.Level = _in.readU8();
 		this.RequiredMods = ::MSU.Serialization.deserialize(_in);
+		this.HomeName = _in.readString();
+		this.HomeBanner = _in.readString();
+		this.HomeRenown = _in.readI32();
 
 		this.LifetimeStats = {};
 		local len = _in.readU32();
 		for (local i = 0; i < len; i++)
 		{
+			local campaignUID = _in.readString();
 			local stats = ::ModPersistentCharacters.Class.LifetimeStats();
 			stats.onDeserialize(_in);
-			this.LifetimeStats[_in.readString()] <- stats;
+			this.LifetimeStats[campaignUID] <- stats;
 		}
-
-		this.LifetimeStatsTotal = ::MSU.Serialization.deserialize(_in);
 	}
 }

@@ -10,11 +10,18 @@
 	constructor( _uid = null )
 	{
 		this.UID = _uid;
+		this.BroUIDs = [];
+		if (_uid != null)
+			this.refresh();
+	}
+
+	// Updates the campaign information from the currently loaded campaign
+	function refresh()
+	{
 		this.Name = ::World.Assets.getName();
 		this.Banner = ::World.Assets.getBanner();
 		this.BannerID = ::World.Assets.getBannerID();
 		this.BusinessReputation = ::World.Assets.getBusinessReputation();
-		this.BroUIDs = [];
 	}
 
 	function getUID()
@@ -47,21 +54,41 @@
 		return this.BusinessReputation;
 	}
 
-	function validateRequiredMods()
+	// Returns an array of { ID, Name } of the mods required by any bro of this campaign which are not installed.
+	// All bros of a campaign share the same required mods as their snapshots are captured together.
+	function getMissingMods()
 	{
-		if (this.BroUIDs.len() != 0)
-			return ::ModPersistentCharacters.getDataManager().getBro(this.BroUIDs[0]).validateRequiredMods();
+		local ret = [];
+		local seen = {};
+		local dataManager = ::ModPersistentCharacters.getDataManager();
+		foreach (broUID in this.BroUIDs)
+		{
+			local broData = dataManager.getBro(broUID);
+			if (broData == null)
+				continue;
+
+			foreach (mod in broData.getMissingMods())
+			{
+				if (!(mod.ID in seen))
+				{
+					seen[mod.ID] <- true;
+					ret.push(mod);
+				}
+			}
+		}
+		return ret;
 	}
 
-	function hasUnblockedBro()
+	function isLoadable()
 	{
-		local blockedBros = ::ModPersistentCharacters.getBlockedBros();
-		foreach (broData in this.BroUIDs)
+		local dataManager = ::ModPersistentCharacters.getDataManager();
+		foreach (broUID in this.BroUIDs)
 		{
-			if (blockedBros.find(broData.getUID()) == null)
-				return true;
+			local broData = dataManager.getBro(broUID);
+			if (broData != null && !broData.isLoadable())
+				return false;
 		}
-		return false;
+		return true;
 	}
 
 	function hasBro( _uid )
@@ -69,28 +96,28 @@
 		return this.BroUIDs.find(_uid) != null;
 	}
 
-	function getBro( _uid )
-	{
-		foreach (uid in this.BroUIDs)
-		{
-			if (uid == _uid)
-				return ::ModPersistentCharacters.getDataManager().getBro(uid);
-		}
-	}
-
-	function getRandomBro( _filterFunc = null )
+	function getBros()
 	{
 		local dataManager = ::ModPersistentCharacters.getDataManager();
-		local ret = ::MSU.Array.rand(_filterFunc == null ? this.BroUIDs : this.BroUIDs.filter(@(_, _uid) dataManager.hasBro(_uid) && _filterFunc(dataManager.getBro(_uid))));
-		if (ret != null)
+		local ret = [];
+		foreach (uid in this.BroUIDs)
 		{
-			return dataManager.getBro(ret);
+			local broData = dataManager.getBro(uid);
+			if (broData != null)
+				ret.push(broData);
 		}
+		return ret;
 	}
 
 	function addBro( _uid )
 	{
-		this.BroUIDs.push(_uid);
+		if (!this.hasBro(_uid))
+			this.BroUIDs.push(_uid);
+	}
+
+	function removeBro( _uid )
+	{
+		return ::MSU.Array.removeByValue(this.BroUIDs, _uid);
 	}
 
 	function clear()

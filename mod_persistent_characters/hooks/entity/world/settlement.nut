@@ -44,22 +44,16 @@
 
 		if (::Math.rand(1, 100) <= ::ModPersistentCharacters.Mod.ModSettings.getSetting("SpawnChance").getValue())
 		{
-			local renownThreshold = ::World.Assets.getBusinessReputation() / (::ModPersistentCharacters.Mod.ModSettings.getSetting("RequiredRenown").getValue() * 0.01);
-
-			local campaign = dataManager.getRandomCampaign(@(_c) _c.getUID() != campaignUID && _c.getBusinessReputation() <= renownThreshold && _c.validateRequiredMods() == null);
-			if (campaign != null)
+			local broData = dataManager.getRandomSpawnableBro();
+			if (broData != null)
 			{
-				local broData = campaign.getRandomBro(@(_b) _b.canSpawn());
-				if (broData != null)
+				local bro = broData.createBro(myRoster);
+				local weapon = bro.getMainhandItem();
+				if (weapon != null && weapon.getID().find("banner") != null)
 				{
-					local bro = broData.createBro(myRoster);
-					local weapon = bro.getMainhandItem();
-					if (weapon != null && weapon.getID().find("banner") != null)
-					{
-						bro.getItems().unequip(weapon);
-					}
-					::ModPersistentCharacters.addBlockedBro(broData.getUID());
+					bro.getItems().unequip(weapon);
 				}
+				::ModPersistentCharacters.addBlockedBro(broData.getUID());
 			}
 		}
 

@@ -1,5 +1,6 @@
 this.mod_persistent_characters_persistent_bro_offers_to_join_event <- ::inherit("scripts/events/event", {
 	m = {
+		BroData = null,
 		Bro = null,
 		Demand = null,
 		OriginalCompanyName = null,
@@ -160,52 +161,31 @@ this.mod_persistent_characters_persistent_bro_offers_to_join_event <- ::inherit(
 			return;
 
 		local currentCampaignUID = ::ModPersistentCharacters.getCampaignUID();
-		local currentBros = ::World.getPlayerRoster().getAll().filter(@(_, _b) _b.ModPersistentCharacters_getUID() != null && _b.ModPersistentCharacters_getCampaignUID() != currentCampaignUID);
+		local dataManager = ::ModPersistentCharacters.getDataManager();
+		local currentBros = ::World.getPlayerRoster().getAll().filter(function( _, _b ) {
+			local broData = dataManager.getBro(_b.ModPersistentCharacters_getUID());
+			return broData != null && !broData.isHome(currentCampaignUID);
+		});
 
 		if (currentBros.len() >= 10)
 			return;
 
-		local hasValidCampaign = false;
-		local renownThreshold = ::World.Assets.getBusinessReputation() / (::ModPersistentCharacters.Mod.ModSettings.getSetting("RequiredRenown").getValue() * 0.01);
-		local dataManaager = ::ModPersistentCharacters.getDataManager();
-		foreach (campaignData in dataManaager.getCampaigns())
+		this.m.BroData = dataManager.getRandomSpawnableBro();
+		if (this.m.BroData != null)
 		{
-			if (campaignData.getBusinessReputation() > renownThreshold)
-				continue;
-
-			foreach (broUID in campaignData.getBroUIDs())
-			{
-				if (dataManaager.getBro(broUID).canSpawn())
-				{
-					this.m.Score = 100 - currentBros.len() * 10;
-					return;
-				}
-			}
+			this.m.Score = 100 - currentBros.len() * 10;
 		}
 	}
 
 	function onPrepare()
 	{
-		local dataManaager = ::ModPersistentCharacters.getDataManager();
-		local currentCampaignUID = ::ModPersistentCharacters.getCampaignUID();
-		local renownThreshold = ::World.Assets.getBusinessReputation() / (::ModPersistentCharacters.Mod.ModSettings.getSetting("RequiredRenown").getValue() * 0.01);
-		local campaignData = ::ModPersistentCharacters.getDataManager().getRandomCampaign(function( _c ) {
-			if (_c.getUID() == currentCampaignUID || _c.getBusinessReputation() > renownThreshold || _c.validateRequiredMods() != null)
-				return false;
-
-			foreach (broUID in _c.getBroUIDs())
-			{
-				if (dataManaager.getBro(broUID).canSpawn())
-				{
-					return true;
-				}
-			}
-
-			return false;
-		});
-
-		local blockedBros = ::ModPersistentCharacters.getBlockedBros();
-		local broData = campaignData.getRandomBro(@(_b) blockedBros.find(_b.getUID()) == null);
+		local broData = this.m.BroData;
+		if (!broData.canSpawn())
+		{
+			local alternative = ::ModPersistentCharacters.getDataManager().getRandomSpawnableBro();
+			if (alternative != null)
+				broData = alternative;
+		}
 
 		this.m.Bro = broData.createBro(::World.getTemporaryRoster());
 		this.m.Bro.getBackground().adjustHiringCostBasedOnEquipment();
@@ -221,8 +201,8 @@ this.mod_persistent_characters_persistent_bro_offers_to_join_event <- ::inherit(
 			this.m.Bro.getItems().unequip(weapon);
 		}
 
-		this.m.OriginalCompanyName = campaignData.getName();
-		this.m.OriginalCompanyBanner = campaignData.getBanner();
+		this.m.OriginalCompanyName = broData.getHomeName() == "" ? "Forgotten Company" : broData.getHomeName();
+		this.m.OriginalCompanyBanner = broData.getHomeBanner() == "" ? "banner_01" : broData.getHomeBanner();
 
 		this.m.TextVariant = ::Math.rand(1, 4);
 	}
@@ -241,6 +221,7 @@ this.mod_persistent_characters_persistent_bro_offers_to_join_event <- ::inherit(
 
 	function onClear()
 	{
+		this.m.BroData = null;
 		this.m.Bro = null;
 		this.m.Demand = null;
 		this.m.OriginalCompanyName = null;

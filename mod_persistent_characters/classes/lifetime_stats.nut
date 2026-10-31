@@ -37,7 +37,7 @@
 
 	function isDead()
 	{
-		return this.Isdead;
+		return this.IsDead;
 	}
 
 	function setDead( _bool )

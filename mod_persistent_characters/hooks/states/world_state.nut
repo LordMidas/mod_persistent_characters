@@ -3,22 +3,22 @@
 	{
 		::ModPersistentCharacters.getDataManager().onSaveCampaign();
 		::ModPersistentCharacters.writeToFile();
-		::ModPersistentCharacters.resetImportPage();
 		__original(_campaignFileName, _campaignLabel);
 	}
 
 	q.loadCampaign = @(__original) function( _campaignFileName )
 	{
-		::ModPersistentCharacters.RequiredMods.clear();
 		::ModPersistentCharacters.readFromFile();
 		__original(_campaignFileName);
-
+		// Campaigns saved before required mods were stored per campaign
+		if (!::World.Flags.has(::ModPersistentCharacters.FlagID.RequiredMods))
+			::ModPersistentCharacters.initRequiredMods();
 	}
 
 	q.startNewCampaign = @(__original) function()
 	{
 		::ModPersistentCharacters.readFromFile();
-		::ModPersistentCharacters.resetImportPage();
 		__original();
+		::ModPersistentCharacters.initRequiredMods();
 	}
 });
