@@ -271,10 +271,7 @@
 
 	function generateUID()
 	{
-		local ret = ::Math.rand().tostring();
-		ret += ::Math.rand().tostring();
-		ret += ::Math.rand().tostring();
-		return ret + ::Math.rand().tostring();
+		return format("%s-%s-%s-%s", ::Math.rand().tostring(), ::Math.rand().tostring(), ::Math.rand().tostring(), ::Math.rand().tostring());
 	}
 
 	function getPersistentCharacterTooltip( _bro )
