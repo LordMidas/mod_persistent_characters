@@ -61,7 +61,7 @@
 	function onSerialize( _out )
 	{
 		_out.writeString(this.Script);
-		this.SerData.serialize(_out);
+		::MSU.Serialization.serialize(this.SerData, _out);
 
 		_out.writeU32(this.SpriteData.len());
 		foreach (spriteName, spriteData in this.SpriteData)
@@ -74,7 +74,7 @@
 	function onDeserialize( _in )
 	{
 		this.Script = _in.readString();
-		this.SerData = ::MSU.Serialization.__readValueFromStorage(_in.readU8(), _in);
+		this.SerData = ::MSU.Serialization.deserialize(_in);
 
 		local len = _in.readU32();
 		this.SpriteData = {};
