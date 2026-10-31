@@ -13,6 +13,7 @@
 		// Campaigns saved before required mods were stored per campaign
 		if (!::World.Flags.has(::ModPersistentCharacters.FlagID.RequiredMods))
 			::ModPersistentCharacters.initRequiredMods();
+		::ModPersistentCharacters.showInfoEventIfNewVersion();
 	}
 
 	q.startNewCampaign = @(__original) function()
@@ -20,5 +21,6 @@
 		::ModPersistentCharacters.readFromFile();
 		__original();
 		::ModPersistentCharacters.initRequiredMods();
+		::ModPersistentCharacters.showInfoEventIfNewVersion();
 	}
 });

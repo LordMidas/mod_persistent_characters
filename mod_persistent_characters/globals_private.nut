@@ -10,7 +10,8 @@
 		CampaignUID = ::ModPersistentCharacters.ID + ".CampaignUID",
 		BroUID = ::ModPersistentCharacters.ID + ".BroUID",
 		RequiredMods = ::ModPersistentCharacters.ID + ".RequiredMods",
-		SavingDisabled = ::ModPersistentCharacters.ID + ".SavingDisabled"
+		SavingDisabled = ::ModPersistentCharacters.ID + ".SavingDisabled",
+		LastSeenVersion = ::ModPersistentCharacters.ID + ".LastSeenVersion"
 	},
 	// Mods which are never offered as required
 	IgnoredMods = [
@@ -129,6 +130,34 @@
 			::World.Flags.remove(this.FlagID.SavingDisabled);
 		else
 			::World.Flags.set(this.FlagID.SavingDisabled, true);
+	}
+
+	function hasSeenCurrentVersion()
+	{
+		return ::World.Flags.has(this.FlagID.LastSeenVersion) && ::World.Flags.get(this.FlagID.LastSeenVersion) == this.Version;
+	}
+
+	// Shows the info event once per campaign for each new version of the mod. It is retried until
+	// an event can be fired e.g. after the scenario intro event of a new campaign.
+	function showInfoEventIfNewVersion()
+	{
+		if (!this.hasSeenCurrentVersion())
+			::Time.scheduleEvent(::TimeUnit.Real, 2000, this.__tryShowInfoEvent.bindenv(this), null);
+	}
+
+	function __tryShowInfoEvent( _tag )
+	{
+		local activeState = ::MSU.Utils.getActiveState();
+		if (activeState == null || activeState.ClassName != "world_state" || this.hasSeenCurrentVersion())
+			return;
+
+		if (::World.Events.canFireEvent(true, true) && ::World.Events.fire("event.mod_persistent_characters_info"))
+		{
+			::World.Flags.set(this.FlagID.LastSeenVersion, this.Version);
+			return;
+		}
+
+		::Time.scheduleEvent(::TimeUnit.Real, 2000, this.__tryShowInfoEvent.bindenv(this), null);
 	}
 
 	function hasBlockedBro( _uid )
