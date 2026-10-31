@@ -17,10 +17,17 @@
 		if (this.getContainer().getActor().ModPersistentCharacters_getUID() != null)
 		{
 			local actor = this.getContainer().getActor();
-			local wageMult = ::ModPersistentCharacters.Mod.ModSettings.getSetting("CostMult_Wage").getValue();
-			actor.getBaseProperties().DailyWageMult *= wageMult;
-			actor.getCurrentProperties().DailyWageMult *= wageMult;
 			actor.m.HiringCost = ::Math.ceil(actor.m.HiringCost * ::ModPersistentCharacters.Mod.ModSettings.getSetting("CostMult_Hire").getValue() * 0.1) * 10;
+		}
+	}
+
+	q.onUpdate = @(__original) function( _properties )
+	{
+		__original(_properties);
+
+		if (this.getContainer().getActor().ModPersistentCharacters_getUID() != null)
+		{
+			_properties.DailyWageMult *= ::ModPersistentCharacters.Mod.ModSettings.getSetting("CostMult_Wage").getValue();
 		}
 	}
 });
