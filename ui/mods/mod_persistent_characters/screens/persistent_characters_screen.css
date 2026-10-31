@@ -1,0 +1,945 @@
+.ui-control.rf-dialog-max
+{
+    background-image: url("coui://gfx/ui/skin/dialog_background_01.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+/* The whole dialog has a fixed size in rem, like the vanilla screens, so it scales uniformly with the UI scale. */
+.mod_persistent_characters_screen
+{
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 184.0rem;
+    height: 98.0rem;
+    position: absolute;
+    margin: auto;
+    z-index: 2;
+}
+
+/* ------------------------------------------------------------------ columns */
+
+.mod_persistent_characters_screen .content > .column
+{
+    height: 84.0rem;
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+    position: relative;
+    float: left;
+
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    background-image: url("coui://gfx/ui/skin/dialog_panel_01.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+.mod_persistent_characters_screen .content > .column.is-left
+{
+    width: 40.0rem;
+    padding-left: 1.0rem;
+    padding-right: 1.6rem;
+}
+
+.mod_persistent_characters_screen .content > .column.is-middle
+{
+    width: 50.5rem;
+    padding-left: 1.0rem;
+    padding-right: 1.6rem;
+}
+
+.mod_persistent_characters_screen .content > .column.is-right
+{
+    width: 93.5rem;
+    padding-left: 0.5rem;
+    padding-right: 1.0rem;
+}
+
+.mod_persistent_characters_screen .content .l-list-container
+{
+    top: 1.0rem;
+    left: 1.0rem;
+    right: 1.6rem;
+    bottom: 1.0rem;
+    position: absolute;
+}
+
+.mod_persistent_characters_screen .content > .column.is-left .l-list-container
+{
+    bottom: 14.5rem;
+}
+
+.mod_persistent_characters_screen .content .l-list-container .ui-control.list .list-entry.is-selected
+{
+    text-shadow: 1px 1px 1px #000;
+}
+
+.mod_persistent_characters_screen .content .l-list-container .scroll-container
+{
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.mod_persistent_characters_screen .content .l-left-buttons
+{
+    left: 1.0rem;
+    right: 1.6rem;
+    bottom: 1.0rem;
+    height: 13.4rem;
+    position: absolute;
+}
+
+.mod_persistent_characters_screen .content .l-left-buttons .l-column-button
+{
+    width: 17.5rem;
+    height: 4.3rem;
+    margin: 0 auto 0.4rem auto;
+    position: relative;
+    line-height: 3.0rem;
+}
+
+/* ------------------------------------------------------------------ campaign list */
+
+.mod_persistent_characters_screen .ui-control.campaign .inner-container,
+.mod_persistent_characters_screen .ui-control.campaign:hover .inner-container,
+.mod_persistent_characters_screen .ui-control.campaign.is-selected .inner-container,
+.mod_persistent_characters_screen .ui-control.campaign.is-disabled .inner-container
+{
+    background-size: 100% 100%;
+}
+
+.mod_persistent_characters_screen .ui-control.campaign .inner-container > .column.is-right .label.is-date-time
+{
+    right: 1.0rem;
+    bottom: 0.8rem;
+    text-align: right;
+}
+
+/* The loose characters icon is a small asset icon which gets pixelated at the 10rem banner height */
+.mod_persistent_characters_screen .ui-control.campaign.is-loose .inner-container > .column.is-left img
+{
+    width: 5.2rem;
+    height: 5.2rem;
+}
+
+.mod_persistent_characters_screen .ui-control.campaign.is-disabled
+{
+    cursor: default;
+}
+
+/* ------------------------------------------------------------------ bro list */
+
+.mod_persistent_characters_screen .content .scroll-container .l-row
+{
+    width: 100%;
+    height: 10.7rem;
+    position: relative;
+    margin-bottom: -0.1rem;
+
+    overflow: hidden;
+}
+
+.mod_persistent_characters_screen .content .l-list-container .ui-control.list .list-entry,
+.mod_persistent_characters_screen .content .l-list-container .ui-control.list .list-entry:hover,
+.mod_persistent_characters_screen .content .l-list-container .ui-control.list .list-entry.is-selected
+{
+    background-size: 100% 100%;
+}
+
+.mod_persistent_characters_screen .content .l-list-container .ui-control.list .list-entry.is-disabled,
+.mod_persistent_characters_screen .content .l-list-container .ui-control.list .list-entry.is-disabled:hover
+{
+    background-image: url("coui://gfx/ui/skin/list_item_01_inactive.png");
+    background-size: 100% 100%;
+    cursor: default;
+}
+
+.mod_persistent_characters_screen .content .l-row .column
+{
+    height: 100%;
+    position: absolute;
+}
+
+.mod_persistent_characters_screen .content .l-row .column.is-left
+{
+    top: 0;
+    left: 0;
+    width: 9.0rem;
+    z-index: 2;
+}
+
+.mod_persistent_characters_screen .content .l-row .column.is-left > img
+{
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    margin: auto;
+
+    display: block;
+}
+
+.mod_persistent_characters_screen .content .l-row .column.is-right
+{
+    top: 0;
+    left: 9.0rem;
+    right: 0;
+    z-index: 1;
+}
+
+.mod_persistent_characters_screen .content .l-row .row
+{
+    left: 0;
+    right: 1.0rem;
+    position: absolute;
+}
+
+.mod_persistent_characters_screen .content .l-row .row.is-top
+{
+    top: 1.0rem;
+    height: 3.8rem;
+    width: 96%;
+
+    border-image: url("coui://gfx/ui/skin/line_metal.png") 0% 0% 100% 0%;
+    border-image-outset: 0 0 -0.5rem 0;
+}
+
+.mod_persistent_characters_screen .content .l-row .row.is-top > img
+{
+    left: 0;
+    bottom: 0.2rem;
+    width: 2.6rem;
+    height: 2.6rem;
+    position: absolute;
+
+    display: block;
+}
+
+.mod_persistent_characters_screen .content .l-row .row.is-top .name
+{
+    left: 3.4rem;
+    right: 5.5rem;
+    bottom: 0.2rem;
+    height: 2.6rem;
+    position: absolute;
+    overflow: hidden;
+    white-space: nowrap;
+
+    line-height: 3.0rem;
+}
+
+.mod_persistent_characters_screen .content .l-row .row.is-top .name.no-icon
+{
+    left: 0.4rem;
+}
+
+.mod_persistent_characters_screen .content .l-row .row.is-top .l-level-container
+{
+    right: -2.0rem;
+    width: 6.0rem;
+    height: 100%;
+    position: absolute;
+}
+
+.mod_persistent_characters_screen .content .l-row .row.is-top .l-level-container img
+{
+    left: 0;
+    bottom: 0.1rem;
+    width: 2.6rem;
+    height: 2.6rem;
+    position: absolute;
+
+    display: block;
+}
+
+.mod_persistent_characters_screen .content .l-row .row.is-top .l-level-container > .level
+{
+    left: 3.0rem;
+    right: 0;
+    bottom: 0.2rem;
+    height: 2.6rem;
+    position: absolute;
+
+    line-height: 3.0rem;
+}
+
+.mod_persistent_characters_screen .content .l-row .row.is-bottom
+{
+    top: 4.8rem;
+    bottom: 0.4rem;
+}
+
+.mod_persistent_characters_screen .content .l-row .row.is-bottom .is-traits-container
+{
+    top: 0;
+    left: 0.2rem;
+    right: 0;
+    height: 2.6rem;
+    position: absolute;
+}
+
+.mod_persistent_characters_screen .content .l-row .row.is-bottom .is-traits-container > img
+{
+    width: 2.6rem;
+    height: 2.6rem;
+
+    position: relative;
+    display: block;
+    float: left;
+}
+
+.mod_persistent_characters_screen .content .l-row .row.is-bottom .is-badges
+{
+    top: 2.9rem;
+    left: 0.2rem;
+    right: 0;
+    height: 2.6rem;
+    position: absolute;
+    overflow: hidden;
+
+    line-height: 1.3rem;
+    text-align: left;
+}
+
+.mod_persistent_characters_screen .content .l-row .row.is-bottom .is-badges .badge
+{
+    margin-right: 1.0rem;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+/* ------------------------------------------------------------------ details */
+
+.mod_persistent_characters_screen .content .l-details-frame
+{
+    top: 3.0rem;
+    left: 2.0rem;
+    width: 89.5rem;
+    height: 80.0rem;
+    position: absolute;
+}
+
+.mod_persistent_characters_screen .content .details-container
+{
+    width: 89.5rem;
+    height: 80.0rem;
+    position: relative;
+}
+
+/* grid cells, all fixed sizes */
+
+.mod_persistent_characters_screen .pc-cell
+{
+    position: absolute;
+    overflow: hidden;
+}
+
+.mod_persistent_characters_screen .pc-cell-tl { top: 0; left: 0; width: 36.0rem; height: 44.0rem; }
+.mod_persistent_characters_screen .pc-cell-tr { top: 0; left: 37.0rem; width: 53.0rem; height: 44.0rem; }
+.mod_persistent_characters_screen .pc-cell-bl { top: 50.0rem; left: 0; width: 36.0rem; height: 22.0rem; }
+.mod_persistent_characters_screen .pc-cell-br { top: 50.0rem; left: 37.0rem; width: 53.0rem; height: 22.0rem; }
+
+/* paperdoll: native size of the vanilla paperdoll module (34.0rem wide, 25.0 + 0.5 + 7.4rem high).
+   The slot outlines are part of the vanilla background image (142.1rem x 90.6rem). The vanilla character screen
+   container is at (20.9rem, 12.5rem) of that image and the module sits 9.0rem (header) + 1.2rem (margin) below the
+   container top, so the module starts at (20.9rem, 22.7rem). */
+
+.mod_persistent_characters_screen .paperdoll-module
+{
+    top: 6.0rem;
+    left: 1.0rem;
+    width: 34.0rem;
+    height: 32.9rem;
+    position: absolute;
+}
+
+.mod_persistent_characters_screen .paperdoll-module .equipment-column .l-slot-container
+{
+    background-image: url("coui://gfx/ui/skin/paperdoll_slot_small.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 7.4rem 7.4rem;
+}
+
+.mod_persistent_characters_screen .paperdoll-module .equipment-column .l-slot-container.is-big
+{
+    background-image: url("coui://gfx/ui/skin/paperdoll_slot_big.png");
+    background-size: 7.4rem 14.0rem;
+}
+
+.mod_persistent_characters_screen .paperdoll-module .equipment-column
+{
+    width: 11.2rem;
+    height: 25.0rem;
+    position: relative;
+    float: left;
+}
+
+.mod_persistent_characters_screen .paperdoll-module .equipment-column.is-middle
+{
+    width: 11.6rem;
+}
+
+.mod_persistent_characters_screen .paperdoll-module .equipment-column > .l-equipment-column
+{
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 7.0rem;
+    position: absolute;
+    margin: auto;
+}
+
+.mod_persistent_characters_screen .paperdoll-module .l-equipment-column.is-left { left: 0.5rem; }
+.mod_persistent_characters_screen .paperdoll-module .l-equipment-column.is-right { right: 0.7rem; }
+
+.mod_persistent_characters_screen .paperdoll-module .l-slot-container
+{
+    width: 7.0rem;
+    height: 7.0rem;
+    position: relative;
+}
+
+.mod_persistent_characters_screen .paperdoll-module .l-slot-container.is-big { height: 14.0rem; }
+.mod_persistent_characters_screen .paperdoll-module .l-slot-container.is-top-small-offset { margin-top: 1.0rem; }
+.mod_persistent_characters_screen .paperdoll-module .l-slot-container.is-top-big-offset { margin-top: 1.8rem; }
+.mod_persistent_characters_screen .paperdoll-module .l-slot-container.is-in-between-offset { margin-top: 1.0rem; }
+
+.mod_persistent_characters_screen .paperdoll-module .backpack-row
+{
+    width: 34.0rem;
+    height: 7.4rem;
+    position: relative;
+    float: left;
+    margin-top: 0.5rem;
+}
+
+.mod_persistent_characters_screen .paperdoll-module .backpack-row .l-backpack-row
+{
+    top: 0;
+    left: 0;
+    height: 7.4rem;
+    position: absolute;
+}
+
+.mod_persistent_characters_screen .paperdoll-module .l-backpack-row.has-slot-1 { width: 7.4rem; }
+.mod_persistent_characters_screen .paperdoll-module .l-backpack-row.has-slot-2 { width: 14.8rem; left: 9.8rem; }
+.mod_persistent_characters_screen .paperdoll-module .l-backpack-row.has-slot-3 { width: 22.6rem; }
+.mod_persistent_characters_screen .paperdoll-module .l-backpack-row.has-slot-4 { width: 30.4rem; left: 2.4rem; }
+
+.mod_persistent_characters_screen .paperdoll-module .l-slot-container.is-backpack
+{
+    float: left;
+    margin-left: 0.4rem;
+
+    background-image: url("coui://gfx/ui/skin/inventory_bag_slot.png");
+    background-size: 7.4rem 7.4rem;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    overflow: hidden;
+}
+
+.mod_persistent_characters_screen .paperdoll-module .l-slot-container.is-backpack:first-child { margin-left: 0; }
+
+/* stats */
+
+.mod_persistent_characters_screen .pc-stats
+{
+    top: 0.5rem;
+    left: 1.0rem;
+    width: 34.0rem;
+    height: 21.0rem;
+    position: absolute;
+}
+
+.mod_persistent_characters_screen .pc-stat-column
+{
+    top: 0;
+    width: 17.0rem;
+    height: 21.0rem;
+    position: relative;
+    float: left;
+}
+
+.mod_persistent_characters_screen .pc-stat-row
+{
+    width: 17.0rem;
+    height: 2.6rem;
+    position: relative;
+}
+
+.mod_persistent_characters_screen .pc-stat-icon
+{
+    top: 0;
+    left: 0;
+    width: 3.0rem;
+    height: 2.6rem;
+    position: absolute;
+}
+
+.mod_persistent_characters_screen .pc-stat-icon > img
+{
+    width: 2.6rem;
+    height: 2.6rem;
+}
+
+.mod_persistent_characters_screen .pc-stat-icon > img.pc-talent
+{
+    top: -0.3rem;
+    left: 2.8rem;
+    width: 3.6rem;
+    height: 1.8rem;
+    position: absolute;
+    z-index: 20;
+}
+
+/* the frame art of the progressbar is 12.7rem wide, so the bar must be as well */
+.mod_persistent_characters_screen .pc-stat-bar
+{
+    top: 0.2rem;
+    left: 3.0rem;
+    width: 12.7rem;
+    height: 2.2rem;
+    position: absolute;
+}
+
+/* perks: vanilla sizes (5.0rem per perk, 6.0rem per row) */
+
+.mod_persistent_characters_screen .pc-section-title
+{
+    height: 2.4rem;
+    line-height: 2.4rem;
+    text-align: left;
+}
+
+.mod_persistent_characters_screen .pc-perk-tree
+{
+    top: 0;
+    left: 0;
+    width: 53.0rem;
+    height: 44.0rem;
+    position: absolute;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.mod_persistent_characters_screen .pc-perk-row
+{
+    display: table;
+    height: 6.0rem;
+    margin: 0 auto;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.mod_persistent_characters_screen .pc-perk-row .l-perk-container
+{
+    width: 5.0rem;
+    height: 5.0rem;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.mod_persistent_characters_screen .pc-perk-row .selection-image-layer
+{
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 4.7rem;
+    height: 4.7rem;
+    position: absolute;
+    margin: auto;
+    z-index: 1;
+}
+
+.mod_persistent_characters_screen .pc-perk-row .perk-image-layer
+{
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 4.5rem;
+    height: 4.5rem;
+    position: absolute;
+    margin: auto;
+    z-index: 2;
+}
+
+/* service record */
+
+.mod_persistent_characters_screen .pc-service > .pc-section-title
+{
+    margin-left: 1.0rem;
+}
+
+.mod_persistent_characters_screen .pc-service-row
+{
+    width: 100%;
+    height: 2.6rem;
+    position: relative;
+    line-height: 2.6rem;
+}
+
+.mod_persistent_characters_screen .pc-service > .pc-service-row
+{
+    width: 51.0rem;
+    margin-left: 1.0rem;
+}
+
+.mod_persistent_characters_screen .pc-service-row.is-header
+{
+    border-image: url("coui://gfx/ui/skin/line_metal.png") 0% 0% 100% 0%;
+    border-image-outset: 0 0 -0.5rem 0;
+}
+
+.mod_persistent_characters_screen .pc-service-row > div
+{
+    top: 0;
+    height: 2.6rem;
+    position: absolute;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.mod_persistent_characters_screen .pc-service-row > .c-name
+{
+    left: 0;
+    width: 22.0rem;
+    text-align: left;
+}
+
+.mod_persistent_characters_screen .pc-service-row > .c-name .n
+{
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+}
+
+.mod_persistent_characters_screen .pc-service-row > .c-name .n.has-tag
+{
+    max-width: 75%;
+}
+
+.mod_persistent_characters_screen .pc-service-row > .c-name .t
+{
+    margin-left: 0.6rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    vertical-align: top;
+}
+
+.mod_persistent_characters_screen .pc-service-row > .c-days { left: 23.0rem; width: 5.5rem; }
+.mod_persistent_characters_screen .pc-service-row > .c-battles { left: 29.0rem; width: 7.0rem; }
+.mod_persistent_characters_screen .pc-service-row > .c-kills { left: 36.5rem; width: 5.0rem; }
+
+.mod_persistent_characters_screen .pc-service-row > .c-dead
+{
+    left: 42.5rem;
+    width: 5.0rem;
+    text-align: center;
+}
+
+.mod_persistent_characters_screen .pc-service-list
+{
+    top: 5.2rem;
+    left: 1.0rem;
+    width: 51.0rem;
+    height: 16.8rem;
+    position: absolute;
+}
+
+/* buttons */
+
+.mod_persistent_characters_screen .pc-buttons
+{
+    top: 73.5rem;
+    left: 0;
+    width: 89.5rem;
+    height: 6.0rem;
+    position: absolute;
+    text-align: center;
+
+    border-image: url("coui://gfx/ui/skin/line_metal.png") 100% 0% 0% 0%;
+    border-image-outset: 0 0 0 0;
+}
+
+.mod_persistent_characters_screen .pc-buttons .l-detail-button
+{
+    width: 17.5rem;
+    height: 4.3rem;
+    margin: 1.0rem 0.15rem 0 0.15rem;
+    position: relative;
+    display: inline-block;
+    line-height: 3.0rem;
+}
+
+.mod_persistent_characters_screen .ui-control.button-1 > .label
+{
+    white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.mod_persistent_characters_screen .footer .l-button-bar
+{
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    margin: auto;
+}
+
+.mod_persistent_characters_screen .footer .l-import-file-button
+{
+    top: 0;
+    left: 3.0rem;
+    bottom: 0;
+    width: 17.5rem;
+    height: 4.3rem;
+    position: absolute;
+    margin: auto;
+    line-height: 3.0rem;
+}
+
+.mod_persistent_characters_screen .footer .l-close-button
+{
+    top: 0;
+    right: 3.0rem;
+    bottom: 0;
+    width: 17.5rem;
+    height: 4.3rem;
+    position: absolute;
+    margin: auto;
+    line-height: 3.0rem;
+}
+
+.mod_persistent_characters_screen .footer .status-label
+{
+    top: 0;
+    left: 23.0rem;
+    right: 23.0rem;
+    bottom: 0;
+    height: 3.0rem;
+    position: absolute;
+    margin: auto;
+    overflow: hidden;
+
+    text-align: center;
+    line-height: 3.0rem;
+}
+
+/* ------------------------------------------------------------------ popups */
+
+.ui-control.popup-dialog.pc-popup
+{
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.ui-control.popup-dialog.pc-confirm-popup
+{
+    width: 44.9rem;
+    height: 25.0rem;
+
+    background-image: url("coui://gfx/ui/skin/popup_background_449x250.png");
+}
+
+.ui-control.popup-dialog.pc-big-popup
+{
+    width: 60.0rem;
+    height: 62.0rem;
+
+    background-image: url("coui://gfx/ui/skin/dialog_background_03.png");
+}
+
+.ui-control.popup-dialog .pc-popup-content
+{
+    position: relative;
+    float: left;
+}
+
+.ui-control.popup-dialog .pc-confirm-content
+{
+    width: 44.9rem;
+    height: 13.0rem;
+    padding-left: 3.0rem;
+    padding-right: 3.0rem;
+    overflow: hidden;
+}
+
+.ui-control.popup-dialog .pc-big-content
+{
+    width: 60.0rem;
+    height: 50.0rem;
+    padding-left: 4.0rem;
+    padding-right: 4.0rem;
+}
+
+.ui-control.popup-dialog .pc-popup-hint
+{
+    height: 4.0rem;
+    line-height: 2.0rem;
+    overflow: hidden;
+}
+
+.ui-control.popup-dialog .pc-popup-list
+{
+    top: 4.5rem;
+    left: 4.0rem;
+    right: 4.0rem;
+    bottom: 6.0rem;
+    position: absolute;
+}
+
+.ui-control.popup-dialog .pc-popup-buttons
+{
+    left: 0;
+    right: 0;
+    bottom: 0.4rem;
+    height: 5.0rem;
+    position: absolute;
+    text-align: center;
+}
+
+.ui-control.popup-dialog .pc-popup-buttons .l-popup-button
+{
+    width: 17.5rem;
+    height: 4.3rem;
+    margin: 0.3rem 1.0rem;
+    position: relative;
+    display: inline-block;
+    line-height: 3.0rem;
+}
+
+.ui-control.popup-dialog .pc-row
+{
+    width: 100%;
+    height: 4.6rem;
+    margin-bottom: 0.2rem;
+    position: relative;
+
+    background-image: url("coui://gfx/ui/skin/list_item_01.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+.ui-control.popup-dialog .pc-row:hover,
+.ui-control.popup-dialog .pc-row.is-selected
+{
+    background-image: url("coui://gfx/ui/skin/list_item_01_hovered.png");
+}
+
+.ui-control.popup-dialog .pc-row.is-disabled
+{
+    background-image: url("coui://gfx/ui/skin/list_item_01_inactive.png");
+}
+
+.ui-control.popup-dialog .pc-row.is-disabled:hover,
+.ui-control.popup-dialog .pc-row.is-disabled.is-selected
+{
+    background-image: url("coui://gfx/ui/skin/list_item_01_hovered_inactive.png");
+}
+
+.ui-control.popup-dialog .pc-row .pc-row-check
+{
+    top: 0;
+    left: 1.0rem;
+    bottom: 0;
+    width: 3.0rem;
+    height: 3.0rem;
+    position: absolute;
+    margin: auto;
+}
+
+.ui-control.popup-dialog .pc-row .pc-row-name
+{
+    top: 0;
+    left: 5.0rem;
+    right: 1.0rem;
+    height: 4.6rem;
+    position: absolute;
+    overflow: hidden;
+    white-space: nowrap;
+
+    line-height: 4.6rem;
+    text-align: left;
+}
+
+.ui-control.popup-dialog .pc-popup-list .pc-row .pc-row-name:first-child
+{
+    left: 1.5rem;
+}
+
+/* save toggle in the left column */
+
+.mod_persistent_characters_screen .content .l-left-buttons .l-save-row
+{
+    width: 100%;
+    height: 3.6rem;
+    margin-bottom: 0.4rem;
+    position: relative;
+}
+
+.mod_persistent_characters_screen .content .l-left-buttons .l-save-check
+{
+    top: 0.3rem;
+    left: 0.6rem;
+    width: 3.0rem;
+    height: 3.0rem;
+    position: absolute;
+}
+
+.mod_persistent_characters_screen .content .l-left-buttons .l-save-label
+{
+    top: 0;
+    left: 4.6rem;
+    right: 0;
+    height: 3.6rem;
+    position: absolute;
+    overflow: hidden;
+    white-space: nowrap;
+    line-height: 3.6rem;
+}
+
+/* stop saving popup */
+
+.ui-control.popup-dialog.pc-stop-popup
+{
+    width: 96.0rem;
+    height: 25.0rem;
+
+    background-image: url("coui://gfx/ui/skin/popup_background_449x250.png");
+}
+
+.ui-control.popup-dialog .pc-stop-content
+{
+    width: 96.0rem;
+    height: 13.0rem;
+}
+
+.ui-control.popup-dialog .pc-stop-text
+{
+    top: 1.0rem;
+    left: 3.0rem;
+    right: 3.0rem;
+    height: 3.0rem;
+    position: absolute;
+    text-align: center;
+}
+
+.ui-control.popup-dialog .pc-stop-content .pc-popup-buttons
+{
+    bottom: 1.5rem;
+}
