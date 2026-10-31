@@ -16,7 +16,10 @@
 	// Mods which are never offered as required
 	IgnoredMods = [
 		"vanilla",
-		"mod_persistent_characters"
+		"mod_persistent_characters",
+		"mod_msu",
+		"mod_hooks",
+		"mod_modern_hooks"
 	],
 	// Popularly known save-incompatible mods. These are always required when installed.
 	LockedMods = [
@@ -24,9 +27,6 @@
 		"dlc_wildmen",
 		"dlc_desert",
 		"dlc_lindwurm",
-		"mod_msu",
-		"mod_hooks",
-		"mod_modern_hooks",
 		"mod_legends",
 		"mod_legends_PTR",
 		"mod_reforged",
