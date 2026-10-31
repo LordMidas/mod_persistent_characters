@@ -1,5 +1,5 @@
 ::ModPersistentCharacters <- {
-	Version = "0.1.8",
+	Version = "0.2.0",
 	ID = "mod_persistent_characters",
 	Name = "Persistent Characters",
 	Class = {}
