@@ -38,5 +38,5 @@
 	::ModPersistentCharacters.Screen <- ::new("scripts/ui/mods/screens/persistent_characters_screen");
 	::MSU.UI.registerConnection(::ModPersistentCharacters.Screen);
 
-	::ModPersistentCharacters.Mod.Keybinds.addSQKeybind("toggleScreen", "ctrl+p", ::MSU.Key.State.World, ::ModPersistentCharacters.Screen.toggle.bindenv(::ModPersistentCharacters.Screen));
+	::ModPersistentCharacters.Mod.Keybinds.addSQKeybind("toggleScreen", "ctrl+p", ::MSU.Key.State.World, ::ModPersistentCharacters.Screen.toggle.bindenv(::ModPersistentCharacters.Screen), "Toggle Screen", null, "Open the Persistent Characters screen.");
 }, ::Hooks.QueueBucket.AfterHooks);
