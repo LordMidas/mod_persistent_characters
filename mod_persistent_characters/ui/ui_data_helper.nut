@@ -87,10 +87,23 @@
 		return ret;
 	}
 
+	// Returns the perk tree of _entity as rows of perks. DynamicPerks and Legends give each character his own tree.
+	function getPerkTree( _entity )
+	{
+		if (::Hooks.hasMod("mod_dynamic_perks"))
+			return _entity.getPerkTree().toUIData();
+
+		local background = _entity.getBackground();
+		if (::MSU.isIn("getPerkTree", background, true))
+			return background.getPerkTree();
+
+		return ::Const.Perks.Perks;
+	}
+
 	// Sends only what the screen needs: ID, Icon and IconDisabled of each perk
 	function convertPerkTreeToUIData( _entity )
 	{
-		local tree = ::Hooks.hasMod("mod_dynamic_perks") ? _entity.getPerkTree().toUIData() : ::Const.Perks.Perks;
+		local tree = this.getPerkTree(_entity);
 		local ret = [];
 		foreach (row in tree)
 		{

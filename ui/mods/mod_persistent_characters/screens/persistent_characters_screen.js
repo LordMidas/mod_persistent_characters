@@ -950,6 +950,8 @@ ModPersistentCharactersScreen.prototype.showPerks = function (_data)
 {
 	var container = this.mDetails.PerksContainer;
 	container.empty();
+	var inner = $('<div class="pc-perk-tree-inner"/>');
+	container.append(inner);
 
 	var learned = {};
 	for (var i = 0; i < _data.LearnedPerks.length; ++i)
@@ -957,10 +959,12 @@ ModPersistentCharactersScreen.prototype.showPerks = function (_data)
 		learned[_data.LearnedPerks[i]] = true;
 	}
 
+	var maxRowLength = 0;
 	for (var r = 0; r < _data.Tree.length; ++r)
 	{
+		maxRowLength = Math.max(maxRowLength, _data.Tree[r].length);
 		var row = $('<div class="pc-perk-row"/>');
-		container.append(row);
+		inner.append(row);
 		for (var p = 0; p < _data.Tree[r].length; ++p)
 		{
 			var perk = _data.Tree[r][p];
@@ -979,7 +983,29 @@ ModPersistentCharactersScreen.prototype.showPerks = function (_data)
 			perkContainer.append(image);
 		}
 	}
+
+	// Wide (e.g. Legends) or tall (e.g. DynamicPerks) trees are scaled down to fit the cell.
+	// Computed from the tree size in rem only, so it scales correctly with the UI scale.
+	var scale = Math.min(1.0,
+		ModPersistentCharactersScreen.PerkTreeWidth / (maxRowLength * ModPersistentCharactersScreen.PerkPitchX),
+		ModPersistentCharactersScreen.PerkTreeHeight / (_data.Tree.length * ModPersistentCharactersScreen.PerkPitchY));
+	var transform = scale < 1.0 ? 'scale(' + scale + ')' : '';
+	// The inner box is as wide as the widest row so that rows can be centered within it,
+	// and it is centered in the cell so that it scales down evenly towards the middle
+	var width = Math.max(ModPersistentCharactersScreen.PerkTreeWidth, maxRowLength * ModPersistentCharactersScreen.PerkPitchX);
+	inner.css({
+		'width': width + 'rem',
+		'margin-left': ((ModPersistentCharactersScreen.PerkTreeWidth - width) / 2) + 'rem',
+		'-webkit-transform': transform,
+		'transform': transform
+	});
 };
+
+// Sizes in rem, matching .pc-perk-tree and .pc-perk-row in the css
+ModPersistentCharactersScreen.PerkTreeWidth = 53.0;
+ModPersistentCharactersScreen.PerkTreeHeight = 44.0;
+ModPersistentCharactersScreen.PerkPitchX = 5.6;
+ModPersistentCharactersScreen.PerkPitchY = 6.0;
 
 ModPersistentCharactersScreen.prototype.showServiceRecord = function (_data)
 {

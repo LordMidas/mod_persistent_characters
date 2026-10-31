@@ -525,8 +525,15 @@
     width: 53.0rem;
     height: 44.0rem;
     position: absolute;
-    overflow-x: auto;
-    overflow-y: auto;
+    overflow: hidden;
+}
+
+/* Scaled down via transform in JS when the tree doesn't fit */
+.mod_persistent_characters_screen .pc-perk-tree-inner
+{
+    width: 53.0rem;
+    -webkit-transform-origin: top center;
+    transform-origin: top center;
 }
 
 .mod_persistent_characters_screen .pc-perk-row
