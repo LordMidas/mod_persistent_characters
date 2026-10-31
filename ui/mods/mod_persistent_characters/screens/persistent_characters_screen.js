@@ -1256,6 +1256,8 @@ ModPersistentCharactersScreen.prototype.openRequiredModsPopup = function ()
 		var esc = ModPersistentCharactersScreen.escapeHTML;
 		var popup = self.openPopup('Required Mods', 'pc-popup pc-big-popup');
 		var content = $('<div class="pc-popup-content pc-big-content"/>');
+		// The content must be in the DOM before the list is created so that its scrollbar is sized correctly
+		popup.addPopupDialogContent(content);
 		var inputs = [];
 
 		content.append($('<div class="pc-popup-hint text-font-normal font-color-description">Characters saved from this company can only be loaded when all of the checked mods are installed.</div>'));
@@ -1277,6 +1279,8 @@ ModPersistentCharactersScreen.prototype.openRequiredModsPopup = function ()
 			row.bindTooltip({ contentType: 'msu-generic', modId: self.mModID, elementId: 'ModEntry', modID: _mod.ID });
 			inputs.push({ ID: _mod.ID, Checkbox: checkbox, IsLocked: _mod.IsLocked });
 		});
+
+		list.trigger('update', true);
 
 		var buttonRow = $('<div class="pc-popup-buttons"/>');
 		content.append(buttonRow);
@@ -1316,7 +1320,6 @@ ModPersistentCharactersScreen.prototype.openRequiredModsPopup = function ()
 		{
 			self.destroyPopupDialog();
 		});
-		popup.addPopupDialogContent(content);
 	});
 };
 
@@ -1331,6 +1334,8 @@ ModPersistentCharactersScreen.prototype.openImportFilePopup = function ()
 		var esc = ModPersistentCharactersScreen.escapeHTML;
 		var popup = self.openPopup('Import from File', 'pc-popup pc-big-popup');
 		var content = $('<div class="pc-popup-content pc-big-content"/>');
+		// The content must be in the DOM before the list is created so that its scrollbar is sized correctly
+		popup.addPopupDialogContent(content);
 		var selected = null;
 		var importButton = null;
 		var deleteButton = null;
@@ -1398,6 +1403,8 @@ ModPersistentCharactersScreen.prototype.openImportFilePopup = function ()
 			});
 		});
 
+		list.trigger('update', true);
+
 		var buttonRow = $('<div class="pc-popup-buttons"/>');
 		content.append(buttonRow);
 		var layout = $('<div class="l-popup-button"/>');
@@ -1438,7 +1445,6 @@ ModPersistentCharactersScreen.prototype.openImportFilePopup = function ()
 			self.destroyPopupDialog();
 		});
 		popup.findPopupDialogCancelButton().changeButtonText('Close');
-		popup.addPopupDialogContent(content);
 	});
 };
 
