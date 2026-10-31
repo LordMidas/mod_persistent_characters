@@ -3,10 +3,10 @@ This mod allows characters to persist across campaigns. Several mod settings are
 
 ### Key Features
 - Characters can persist across campaigns. Persistence data for characters is only saved/updated when you Save Game.
-- Persistent stats such as total number of kills, battles, days and permanent injuries are tracked.
+- Persistent stats such as total number of kills, battles, days and permanent injuries are tracked per campaign.
 - Characters from one campaign can appear as recruits in settlements in your future campaigns, with all their perks, items and levels intact.
 - A unique event where a character from one of your older campaigns offers to join you in your current campaign.
-- Import/Export feature to allow you to share your characters with others or save them for importing them later into another campaign at will
+- A Persistent Characters screen (Ctrl+P during a campaign) to browse saved campaigns and characters, view their gear, stats and perks, import/export/delete them and choose the mods required for the current campaign.
 
 ## HOW TO USE
 ### Installation
@@ -15,30 +15,18 @@ Download the .zip file attached to the latest [release](https://github.com/LordM
 ### Mod Settings
 All the mod settings are self-explanatory or have useful tooltips to describe their effect. Various mod settings such as Spawn Chance, Min Level to Spawn, Min Level to Save, Required Renown, Permanent Injuries, Perma Death etc. are available.
 
-### Import/Export
-Until the day that a more convenient UI to view all the saved campaigns and characters is created, we are using the MSU Mod Settings system as a poor man's Import/Export system.
+### Persistent Characters screen
+Press Ctrl+P during a campaign to open the screen (the keybind can be changed in the mod settings). It is not available on the Main Menu.
 
-Import/Export can only be done while you are in a game i.e. it cannot be done from the Main Menu. But once you are in a game, you can import/export from any saved campaign.
+- **Campaigns**: the list of campaigns with saved characters. Campaigns that need mods which are not installed are greyed out; hover over them to see the missing mods.
+- **Loose Characters**: characters whose campaign was removed (via Max Saved Campaigns or deleted in the screen). They can still spawn in your campaigns. Their number is limited by the Max Loose Characters setting.
+- **Characters**: click a campaign to see its characters, and click a character to see his gear, stats, perks and service record.
+- **Import to Company**: adds the character to your current company.
+- **Make Home Company**: a character's saved version is only updated by his home company (by default the campaign in which he was first saved). In other campaigns he is on loan: his service there is recorded but his saved version does not change. Use this button on a character in your company to make your current campaign his home company.
+- **Export / Export Raw**: writes the character to a file in your savegames folder. Raw exports do not carry the persistence data, so the character becomes a new persistent character of whichever campaign imports him. Use **Import from File** to import exported characters.
+- **Required Mods**: choose which installed mods are required by the characters saved from the current campaign. Characters are only spawned or importable in sessions where all their required mods are installed. Popular save-incompatible mods are always required. Your choice is remembered for new campaigns.
+- **Save characters of current campaign**: untick to stop characters whose home is the campaign you are currently playing from being saved or updated as persistent characters (e.g. for test runs). You can choose to keep, loosen or delete the existing data of the campaign.
+- You can also delete characters and campaigns (choosing whether the characters of a deleted campaign become loose or are deleted too) and mark characters as dead or alive in each campaign of their service record.
 
-During this entire process, remember to check the Error Message box to view any errors.
-
-#### Selecting a character to import/export
-- Click on Campaigns List to view the names of your saved campaigns and their UIDs.
-- Copy the UID of the campaign you want to import/export a character from.
-- Paste it in the Campaign UID.
-- Click Submit UIDs.
-- Click on Characters List to view the names of the saved characters from that campaign and their UIDs.
-- Copy the UID of the character you want to import/export.
-- Paste it in the Character UID.
-- Click Submit UIDs.
-
-Now this character can be imported into your current campaign by clicking "Import by UID". Or you can export it to a file by clicking "Export to File". In both of these cases the persistent data attached to that character will be maintained. If you want to export without the persistent data, you should click "Export to File (Raw)". This may be useful when sharing your characters with other players.
-
-DO NOT rename exported files. Their filename is important for reading them during import.
-
-If you want to import a character from a file:
-
-- Put the file in your savegames folder.
-- Do NOT rename the file.
-- Enter the filename in the Filename box in the Import from File section.
-- Click Import from File button to import the character into your current campaign.
+### Updating from 0.1.x
+Version 0.2.0 changes the format of the persistent data. Delete the old data file via the "Delete File" button in the mod settings before or after updating. Your savegames are not affected, but previously saved and exported characters cannot be loaded.
