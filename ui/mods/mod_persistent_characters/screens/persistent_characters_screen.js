@@ -432,6 +432,7 @@ ModPersistentCharactersScreen.prototype.destroyDIV = function ()
 
 ModPersistentCharactersScreen.prototype.show = function (_moveLeftRight, _considerParent)
 {
+	this.fitToScreen();
 	MSUUIScreen.prototype.show.call(this, _moveLeftRight, _considerParent);
 	this.mSelectedCampaign = null;
 	this.mSelectedBroUID = null;
@@ -439,6 +440,29 @@ ModPersistentCharactersScreen.prototype.show = function (_moveLeftRight, _consid
 	this.setStatus('', false);
 	this.loadAll(null, null);
 };
+
+// The dialog has a fixed size in rem. When the screen is smaller than that (e.g. 1600x900 at UI scale 100%
+// is only 160rem x 90rem), the whole dialog is scaled down to fit. The layout itself stays in rem.
+ModPersistentCharactersScreen.prototype.fitToScreen = function ()
+{
+	var remPx = parseFloat($('html').css('font-size'));
+	if (!(remPx > 0))
+		return;
+
+	var margin = 2.0;
+	var scale = Math.min(1.0,
+		($(window).width() / remPx - margin) / ModPersistentCharactersScreen.DialogWidth,
+		($(window).height() / remPx - margin) / ModPersistentCharactersScreen.DialogHeight);
+	var transform = scale < 1.0 ? 'scale(' + scale + ')' : '';
+	this.mContainer.css({
+		'-webkit-transform': transform,
+		'transform': transform
+	});
+};
+
+// Size in rem, matching .mod_persistent_characters_screen in the css
+ModPersistentCharactersScreen.DialogWidth = 184.0;
+ModPersistentCharactersScreen.DialogHeight = 98.0;
 
 ModPersistentCharactersScreen.prototype.hide = function (_moveLeftRight, _considerParent)
 {

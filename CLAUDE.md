@@ -32,7 +32,7 @@ Reference sources for vanilla behavior: the decompiled vanilla scripts/UI and th
 - Preview: a World roster created on show, deleted on hide; entities created only for loadable bros (`BroEntities` broUID -> entity). JS calls `SQ.call(handle, fn, args, cb)`; mutations return `{ Error }` and the JS re-queries. Disabled buttons get a `Text` tooltip with the `Actions.getCannot...Reason`.
 - Tooltips (`msu/tooltips.nut`): `CampaignEntry` (`campaignUID`), `BroEntry` (`broUID`), `ModEntry` (`modID`), `Text` (`title`, `text`, optional `lines: [{icon, text}]`).
 - Perk tree source: DynamicPerks tree, else background `getPerkTree()` (Legends), else `::Const.Perks.Perks`; scaled down in JS (from rem sizes) when too wide/tall.
-- Layout is fixed rem (dialog 184rem x 98rem) so it scales with the game's UI scale: no % of screen, no JS pixel measuring. Coherent draws no native scrollbars: use vanilla `createList` (create it after its parent is in the DOM, then `list.trigger('update', true)`).
+- Layout is fixed rem (dialog 184rem x 98rem) so it scales with the game's UI scale: no % of screen, no JS pixel measuring. Only exception: `fitToScreen` (on show) scales the whole dialog down with a transform when the window is smaller than 184 x 98rem (e.g. 1600x900 at 100% = 160 x 90rem). Coherent draws no native scrollbars: use vanilla `createList` (create it after its parent is in the DOM, then `list.trigger('update', true)`).
 
 ## Settings / misc
 - Mod settings: General page only (spawn chance, levels, renown %, max campaigns, max loose, cost mults, permanent injuries, perma death, delete file). Import/export and required mods live in the screen.

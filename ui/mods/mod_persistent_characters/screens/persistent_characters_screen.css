@@ -5,18 +5,23 @@
     background-repeat: no-repeat;
 }
 
-/* The whole dialog has a fixed size in rem, like the vanilla screens, so it scales uniformly with the UI scale. */
+/* The whole dialog has a fixed size in rem, like the vanilla screens, so it scales uniformly with the UI scale.
+   When it doesn't fit the screen, fitToScreen in the JS scales it down around its center (keep the size in sync
+   with DialogWidth/DialogHeight there). Centered with 50% and negative margins (half the size), because
+   margin: auto stops centering once the dialog is larger than the screen, which would push it right/down. */
 .mod_persistent_characters_screen
 {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 50%;
+    left: 50%;
     width: 184.0rem;
     height: 98.0rem;
     position: absolute;
-    margin: auto;
+    margin-top: -49.0rem;
+    margin-left: -92.0rem;
     z-index: 2;
+
+    -webkit-transform-origin: center center;
+    transform-origin: center center;
 }
 
 /* ------------------------------------------------------------------ columns */
